@@ -1,4 +1,4 @@
-def generate_mstransform_cmd(casa_container, input_ms, output_dir, numchans, start_chan, end_chan,):
+def generate_mstransform_cmd(casa_container, input_ms, output_dir, numchans, start_chan, end_chan):
     """
     Generate the mstransform command.
     

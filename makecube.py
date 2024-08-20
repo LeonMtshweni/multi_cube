@@ -54,7 +54,7 @@ extensions_to_delete_r2 = config['general']['extensions_to_delete_r2']
 # Ensure the WSClean output directory exists
 os.makedirs(wsclean_output_dir, exist_ok=True)
 
-print(f"Executing the following command to split the file into smaller chunks {mstransform_cmd}")
+# print(f"Executing the following command to split the file into smaller chunks {mstransform_cmd}")
 
 # Define your parameters
 input_ms = 'your_input_measurement_set.ms'
@@ -62,7 +62,7 @@ output_prefix = 'output_chunk_'
 num_chunks = 10
 
 # Calculate the total bandwidth
-total_bandwidth = spw_info[0]['TotalBandwidth']  # this is set to the input measurement set
+total_bandwidth = config['general']['total_numchans']  # this is set to the input measurement set
 numchans = 100 # this means make batches, where each batch produces cube with 100 channels
 num_wsclean_runs = int(total_numchans/numchans) # we will run wsclean in this many batches
 
@@ -76,6 +76,10 @@ for batch_i in range(1,num_wsclean_runs):
 
     # Name of directory to place sub-ms file
     batch_dir_name = f"batch_{batch_i}_chans{batch_i*numchans}-{(batch_i+1)*numchans}"
+
+    # starting channel
+    start_chan = (batch_i - 1) * numchans + 1
+    end_chan = batch_i * numchans
     
     #Create sub-directory for sub ms file
     batch_dir_name = os.path.join(msdir, batch_dir_name)
@@ -86,11 +90,14 @@ for batch_i in range(1,num_wsclean_runs):
                         mstransform_container,
                         batch_dir_name,
                         os.path.join(batch_dir_name, '.ms'),
-                        config['mstransform']['script'],
-                        config['mstransform']['output_format'],
-                        config['mstransform']['field_id'],
-                        config['mstransform']['spw'],
-                        config['mstransform']['outframe'])
+                        numchans,
+                        start_chan,
+                        end_chan)
+                        # config['mstransform']['script'],
+                        # config['mstransform']['output_format'],
+                        # config['mstransform']['field_id'],
+                        # config['mstransform']['spw'],
+                        # config['mstransform']['outframe'])
                                                       
     # create the bash executable
     bash_script = os.path.join(outputs, 'mstransform.sh')
