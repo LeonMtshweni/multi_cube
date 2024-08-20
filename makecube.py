@@ -90,9 +90,9 @@ for batch_i in range(1,num_wsclean_runs):
     loging_file = os.path.join(outputs, 'mstransform.log')
 
     # Run CASA from script
-    mstransform_cmd = f"singularity exec {casa_container} casa -c \
-        {os.path.join(modules, 'mstransform_utils.py')} {base_results_dir} {batch_dir_name} \
-            {numchans} --nologger --log2term --nogui\n"
+    mstransform_cmd = f"singularity exec {casa_container} casa -c 
+    {os.path.join(modules, 'mstransform_utils.py')} {base_results_dir} {batch_dir_name} 
+    {numchans} --nologger --log2term --nogui\n"
 
     # write the slurm file
     write_slurm(bash_filename = bash_script,

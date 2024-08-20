@@ -12,19 +12,23 @@ def write_slurm(bash_filename,
                 mem='128GB'):
 
     f = open(bash_filename,'w')
-    f.writelines(['#!/bin/bash\n',
-        '#file: '+bash_filename+':\n',
-        '#SBATCH --job-name='+jobname+'\n',
-        '#SBATCH --time='+time+'\n',
-        '#SBATCH --partition='+partition+'\n'
-        '#SBATCH --ntasks='+ntasks+'\n',
-        '#SBATCH --nodes='+nodes+'\n',
-        '#SBATCH --cpus-per-task='+cpus+'\n',
-        '#SBATCH --mem='+mem+'\n',
-        '#SBATCH --mail-user='+email_address+'\n',
-        '#SBATCH --mail-type=END,FAIL,TIME_LIMIT\n',
-        '#SBATCH --output='+logfile+'\n',
-        '#SBATCH --error=./logs/'+jobname+'_std_err.log\n',
-        cmd+'\n',
-        'sleep 10\n'])
+
+    f.writelines([
+        '#!/bin/bash\n',
+        f'#file: {bash_filename}:\n',
+        f'#SBATCH --job-name={jobname}\n',
+        f'#SBATCH --time={time}\n',
+        f'#SBATCH --partition={partition}\n',
+        f'#SBATCH --ntasks={ntasks}\n',
+        f'#SBATCH --nodes={nodes}\n',
+        f'#SBATCH --cpus-per-task={cpus}\n',
+        f'#SBATCH --mem={mem}\n',
+        f'#SBATCH --mail-user={email_address}\n',
+        f'#SBATCH --mail-type=END,FAIL,TIME_LIMIT\n',
+        f'#SBATCH --output={logfile}\n',
+        f'#SBATCH --error=./logs/{jobname}_std_err.log\n',
+        f'{cmd}\n',
+        'sleep 10\n'
+    ])
+
     f.close()
