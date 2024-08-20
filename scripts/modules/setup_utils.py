@@ -8,20 +8,28 @@ def create_directories(directories):
     - directories: List of directory paths to create.
     """
     for directory in directories:
-        os.makedirs(directory, exist_ok=True)
-        print(f"Created directory: {directory}")
+        try:
+            os.makedirs(directory, exist_ok=True)
+            print(f"Created directory: {directory}")
+        except OSError as e:
+            print(f"Error creating directory {directory}: {e}")
 
 def setup_project_structure():
     """
-    Set up the project structure by creating necessary directories in the parent directory.
+    Set up the project structure by creating necessary directories one level above the current directory.
     """
-    # Define directories to create
-    parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+    # Define the base directory as one level above the current working directory
+    base_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
+
+    # Define the directories to create, relative to the base directory
     directories = [
-        os.path.join(parent_dir, 'msdir'),
-        os.path.join(parent_dir, 'outputs'),
-        os.path.join(parent_dir, 'inputs')
+        os.path.join(base_dir, 'msdir'),
+        os.path.join(base_dir, 'outputs'),
+        os.path.join(base_dir, 'inputs')
     ]
-    
-    # Create directories
+
+    # Create the directories
     create_directories(directories)
+
+if __name__ == "__main__":
+    setup_project_structure()
