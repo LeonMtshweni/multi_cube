@@ -1,9 +1,9 @@
 paths:
   container_base_path: "/software/astro/caracal/STIMELA_IMAGES_1.7.5/"
-  base_data_dir: "/path/to/base/data" # full path to ms file
-  base_results_directory: "/path/to/base/results"
-  wsclean_output_directory: "/path/to/wsclean/output"
-  mstransform_output_directory: "/path/to/mstransform/output"
+  base_data_dir: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir" # full path to ms file
+  base_results_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
+  wsclean_output_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
+  mstransform_output_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
   wsclean_container: "stimela_wsclean_1.6.3.sif"
   kern_container: "/data/exp_soft/containers/kern6-2021-06-11.simg"
   casa_container: "stimela_casa_1.7.1.sif"

@@ -28,7 +28,7 @@ with open('config/config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 # Paths and parameters from config
-base_data_dir = config['paths']['base_data_directory']
+base_data_dir = config['paths']['base_data_dir']
 base_results_dir = config['paths']['base_results_directory']
 wsclean_output_dir = config['paths']['wsclean_output_directory']
 mstransform_output_dir = config['paths']['mstransform_output_directory']
