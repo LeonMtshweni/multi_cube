@@ -19,13 +19,6 @@ wsclean:
   gain: 0.1
   mgain: 0.95
 
-mstransform:
-  script: "mstransform_script.py"
-  output_format: "fits"
-  field_id: 0
-  spw: "0"
-  outframe: "LSRK"
-
 general:
   total_numchans: 1024
   numchans: 100
