@@ -22,6 +22,7 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 msdir = os.path.join(parent_dir, 'msdir')
 outputs = os.path.join(parent_dir, 'outputs')
 inputs = os.path.join(parent_dir, 'inputs')
+modules = os.path.join(parent_dir, 'scripts/modules')
 
 # Load the configuration file
 with open('config/config.yaml', 'r') as file:
@@ -36,7 +37,6 @@ wsclean_container = config['paths']['wsclean_container']
 mstransform_container = config['paths']['casa_container']
 kern_container = config['paths']['kern_container']
 casa_container = config['paths']['casa_container']
-ms_file = config['paths']['raw_data_directory'] # path added
 log_file = config['paths']['log_file']
 
 total_numchans = config['general']['total_numchans']
@@ -84,6 +84,28 @@ for batch_i in range(1,num_wsclean_runs):
     #Create sub-directory for sub ms file
     batch_dir_name = os.path.join(msdir, batch_dir_name)
     os.system(f"mkdir {batch_dir_name}")
+    
+    # create the bash executable
+    bash_script = os.path.join(outputs, 'mstransform.sh')
+    loging_file = os.path.join(outputs, 'mstransform.log')
+
+    # Run CASA from script
+    mstransform_cmd = f"singularity exec {casa_container} casa -c \
+        {os.path.join(modules, 'mstransform_utils.py')} {base_results_dir} {batch_dir_name} \
+            {numchans} --nologger --log2term --nogui\n"
+
+    # write the slurm file
+    write_slurm(bash_filename = bash_script,
+                    jobname = 'split_ms',
+                    logfile = loging_file,
+                    email_address = email_address,
+                    cmd = mstransform_cmd) 
+
+    # Submit the first job and capture its job ID
+    job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
+    f.write(mstransform_cmd + '\n')
+
+    # ------------------------------------------------------------------------------
 
         # Generate and run mstransform command
     mstransform_cmd = generate_mstransform_cmd(
@@ -98,21 +120,6 @@ for batch_i in range(1,num_wsclean_runs):
                         # config['mstransform']['field_id'],
                         # config['mstransform']['spw'],
                         # config['mstransform']['outframe'])
-                                                      
-    # create the bash executable
-    bash_script = os.path.join(outputs, 'mstransform.sh')
-    loging_file = os.path.join(outputs, 'mstransform.log')
-
-    # write the slurm file
-    write_slurm(bash_filename = bash_script,
-                    jobname = 'split_ms',
-                    logfile = loging_file,
-                    email_address = email_address,
-                    cmd = mstransform_cmd) 
-
-    # Submit the first job and capture its job ID
-    job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
-    f.write(mstransform_cmd + '\n')
                                                        
     #-------------------------------------------------------------------------------
 
