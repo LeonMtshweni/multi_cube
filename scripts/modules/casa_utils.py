@@ -1,4 +1,4 @@
-def generate_mstransform_cmd(casa_container, input_ms, script, output_format, field_id, spw, outframe):
+def generate_mstransform_cmd(casa_container, input_ms, output_dir, numchans, start_chan, end_chan,):
     """
     Generate the mstransform command.
     
@@ -17,8 +17,14 @@ def generate_mstransform_cmd(casa_container, input_ms, script, output_format, fi
     """
     mstransform_cmd = (
         f"singularity exec {casa_container} casa mstranform"
-        f"vis='{input_ms}' outputvis='{output_dir}/transformed_data.{output_format}' "
-        f"field='{field_id}' spw='{spw}' outframe='{outframe}'"
+        f"vis = {input_ms}"
+        f"outputvis = {output_dir}"
+        f"mode = 'channel'"
+        f"nchan = {numchans}"
+        f"start = '856MHz'"
+        f"width = '1'"
+        f"restfreq = '1.420405752GHz'"
+        f"outframe = 'bary'"
     )
     return mstransform_cmd
 
