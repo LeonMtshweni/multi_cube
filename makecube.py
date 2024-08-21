@@ -46,7 +46,7 @@ log_file = config['paths']['log_file']
 
 total_numchans = config['general']['total_numchans']
 numchans = config['general']['numchans']
-num_wsclean_runs = total_numchans // numchans
+num_wsclean_runs = config['general']['num_wsclean_runs']
 numpix = config['general']['numpix']
 pixscale = config['general']['pixscale']
 chanbasename = config['general']['chanbasename']
