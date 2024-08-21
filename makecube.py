@@ -57,15 +57,16 @@ extensions_to_delete_r2 = config['general']['extensions_to_delete_r2']
 os.makedirs(wsclean_output_dir, exist_ok=True)
 
 # create the bash executable
-bash_script = os.path.join(outputs, 'mstransform.sh')
-loging_file = os.path.join(outputs, 'mstransform.log')
+bash_script = 'mstransform.sh' #os.path.join(outputs, 'mstransform.sh')
+loging_file = 'mstransform.log' #os.path.join(outputs, 'mstransform.log')
 
 # name of the submit file
 submit_file = 'submit_jobs.sh'
 # Open file for writing
-f = open(bash_script,'w')
+# f = open(bash_script,'w')
 # write header information
-f.write('#!/bin/bash\n')
+# f.write('#!/bin/bash\n')
+
 
 # Run CASA from script
 mstransform_cmd = f"singularity exec {Path(container_base_path, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
