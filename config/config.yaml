@@ -30,11 +30,6 @@ general:
   imfitorder: 4
   extensions_to_delete_r1:
   email_address:
-    - "*-psf.fits"
-    - "*-model.fits"
-    - "*-residual.fits"
-    - "*-dirty.fits"
-    - "-MFS-*.fits"
   extensions_to_delete_r2:
     - "*.linefile"
     - "*.contfile"
