@@ -65,10 +65,10 @@ f = open(submit_file,'w')
 bash_script = os.path.join(outputs, 'mstransform.sh')
 loging_file = os.path.join(outputs, 'mstransform.log')
 
+f = open(bash_script,'w')
+
 # Run CASA from script
-mstransform_cmd = f"singularity exec {Path(container_base_path, casa_container)} casa -c 
-{os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} 
-{num_wsclean_runs} --nologger --log2term --nogui\n"
+mstransform_cmd = f"singularity exec {Path(container_base_path, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
 
 # write the slurm file
 write_slurm(bash_filename = bash_script,
@@ -81,23 +81,23 @@ write_slurm(bash_filename = bash_script,
 job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 f.write(mstransform_cmd + '\n')
 
-    # ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
-        # Generate and run mstransform command
-    mstransform_cmd = generate_mstransform_cmd(
-                        mstransform_container,
-                        batch_dir_name,
-                        os.path.join(batch_dir_name, '.ms'),
-                        numchans,
-                        start_chan,
-                        end_chan)
-                        # config['mstransform']['script'],
-                        # config['mstransform']['output_format'],
-                        # config['mstransform']['field_id'],
-                        # config['mstransform']['spw'],
-                        # config['mstransform']['outframe'])
-                                                       
-    #-------------------------------------------------------------------------------
+# Generate and run mstransform command
+# mstransform_cmd = generate_mstransform_cmd(
+#                     mstransform_container,
+#                     batch_dir_name,
+#                     os.path.join(batch_dir_name, '.ms'),
+#                     numchans,
+#                     start_chan,
+#                     end_chan)
+#                     # config['mstransform']['script'],
+#                     # config['mstransform']['output_format'],
+#                     # config['mstransform']['field_id'],
+#                     # config['mstransform']['spw'],
+#                     # config['mstransform']['outframe'])
+                                                    
+#-------------------------------------------------------------------------------
 
 # Process each batch
 # for batch_i in range(1, num_wsclean_runs + 1):
