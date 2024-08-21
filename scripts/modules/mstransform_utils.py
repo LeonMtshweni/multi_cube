@@ -3,9 +3,9 @@ import sys
 input_ms = sys.argv[1]
 numchans = sys.argv[2]
 num_wsclean_runs = sys.argv[3]
-print(input_ms, input_ms.dtype)
-print(numchans, numchans.dtype)
-print(num_wsclean_runs, num_wsclean_runs.dtype)
+print(input_ms, type(input_ms)
+print(numchans, type(numchans))
+print(num_wsclean_runs, type(num_wsclean_runs))
 # get flag summart from CASA flagdata
 for item, element in enumerate(range(num_wsclean_runs)):
     mstransform(vis = input_ms,
