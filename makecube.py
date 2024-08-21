@@ -33,6 +33,7 @@ with open('config/config.yaml', 'r') as file:
 
 # Paths and parameters from config
 container_base_path = config['paths']['container_base_path']
+container_base_path_ii = config['paths']['container_base_path_ii']
 base_data_dir = config['paths']['base_data_dir']
 input_ms = config['general']['input_ms']
 wsclean_output_dir = config['paths']['wsclean_output_directory']
@@ -71,7 +72,7 @@ submit_file = 'submit_jobs.sh'
 
 
 # Run CASA from script
-mstransform_cmd = f"singularity exec {Path(kern_container, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
+mstransform_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
 
 # write the slurm file
 write_slurm(bash_filename = bash_script,
