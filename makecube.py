@@ -16,14 +16,16 @@ setup_project_structure()
 
 
 # Get the parent directory
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+current_dir = Path.cwd()
 
 # Potentially add a try/except statement here
 # Define relative paths
-msdir = os.path.join(parent_dir, 'msdir')
-outputs = os.path.join(parent_dir, 'outputs')
-inputs = os.path.join(parent_dir, 'inputs')
-modules = os.path.join(parent_dir, 'scripts/modules')
+msdir = os.path.join(current_dir, 'msdir')
+outputs = os.path.join(current_dir, 'outputs')
+inputs = os.path.join(current_dir, 'inputs')
+modules = os.path.join(current_dir, 'scripts/modules')
 
 # Load the configuration file
 with open('config/config.yaml', 'r') as file:
