@@ -1,7 +1,6 @@
 paths:
   container_base_path: "/software/astro/caracal/STIMELA_IMAGES_1.7.5/"
   base_data_dir: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir" # full path to ms file
-  base_results_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
   wsclean_output_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
   mstransform_output_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
   wsclean_container: "stimela_wsclean_1.6.3.sif"
@@ -20,6 +19,7 @@ wsclean:
   mgain: 0.95
 
 general:
+  input_ms: "test.ms"
   total_numchans: 1024
   numchans: 100
   num_wsclean_runs: 10

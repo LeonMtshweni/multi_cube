@@ -1,15 +1,13 @@
 import sys
 
-input_ms = sys.argv[3]
-output_ms = sys.argv[4]
-numchans = sys.argv[5]
+input_ms = sys.argv[1]
+numchans = sys.argv[2]
+num_wsclean_runs = sys.argv[3]
 
 # get flag summart from CASA flagdata
-mstransform(vis = input_ms,
-            outputvis = output_ms,
-            mode = 'channel',
+for item, element in enumerate(range(num_wsclean_runs)):
+    mstransform(vis = input_ms,
+            outputvis = f'batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms',
             nchan = numchans,
-            # start = '856MHz',
-            width = '1',
-            # restfreq = '1.420405752GHz',
+            spw = f"{0:item}",
             outframe = 'bary')

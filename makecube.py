@@ -3,6 +3,7 @@ import os
 import yaml
 import sys
 import glob
+from pathlib import Path
 
 from scripts.modules.setup_utils import setup_project_structure
 from scripts.modules.wsclean_utils import generate_wsclean_cmd
@@ -29,8 +30,9 @@ with open('config/config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 # Paths and parameters from config
+container_base_path = config['paths']['container_base_path']
 base_data_dir = config['paths']['base_data_dir']
-base_results_dir = config['paths']['base_results_directory']
+input_ms = config['general']['input_ms']
 wsclean_output_dir = config['paths']['wsclean_output_directory']
 mstransform_output_dir = config['paths']['mstransform_output_directory']
 wsclean_container = config['paths']['wsclean_container']
@@ -54,56 +56,30 @@ extensions_to_delete_r2 = config['general']['extensions_to_delete_r2']
 # Ensure the WSClean output directory exists
 os.makedirs(wsclean_output_dir, exist_ok=True)
 
-# print(f"Executing the following command to split the file into smaller chunks {mstransform_cmd}")
-
-# Define your parameters
-input_ms = 'your_input_measurement_set.ms'
-output_prefix = 'output_chunk_'
-num_chunks = 10
-
-# Calculate the total bandwidth
-total_bandwidth = config['general']['total_numchans']  # this is set to the input measurement set
-numchans = 100 # this means make batches, where each batch produces cube with 100 channels
-num_wsclean_runs = int(total_numchans/numchans) # we will run wsclean in this many batches
-
 # name of the submit file
 submit_file = 'submit_jobs.sh'
 # Open file for writing
 f = open(submit_file,'w')
 
-# Split the MS into chunks
-for batch_i in range(1,num_wsclean_runs):
+# create the bash executable
+bash_script = os.path.join(outputs, 'mstransform.sh')
+loging_file = os.path.join(outputs, 'mstransform.log')
 
-    # Name of directory to place sub-ms file
-    batch_dir_name = f"batch_{batch_i}_chans{batch_i*numchans}-{(batch_i+1)*numchans}"
+# Run CASA from script
+mstransform_cmd = f"singularity exec {Path(container_base_path, casa_container)} casa -c 
+{os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} 
+{num_wsclean_runs} --nologger --log2term --nogui\n"
 
-    # starting channel
-    start_chan = (batch_i - 1) * numchans + 1
-    end_chan = batch_i * numchans
-    
-    #Create sub-directory for sub ms file
-    batch_dir_name = os.path.join(msdir, batch_dir_name)
-    os.system(f"mkdir {batch_dir_name}")
-    
-    # create the bash executable
-    bash_script = os.path.join(outputs, 'mstransform.sh')
-    loging_file = os.path.join(outputs, 'mstransform.log')
+# write the slurm file
+write_slurm(bash_filename = bash_script,
+                jobname = 'split_ms',
+                logfile = loging_file,
+                email_address = email_address,
+                cmd = mstransform_cmd) 
 
-    # Run CASA from script
-    mstransform_cmd = f"singularity exec {casa_container} casa -c 
-    {os.path.join(modules, 'mstransform_utils.py')} {base_results_dir} {batch_dir_name} 
-    {numchans} --nologger --log2term --nogui\n"
-
-    # write the slurm file
-    write_slurm(bash_filename = bash_script,
-                    jobname = 'split_ms',
-                    logfile = loging_file,
-                    email_address = email_address,
-                    cmd = mstransform_cmd) 
-
-    # Submit the first job and capture its job ID
-    job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
-    f.write(mstransform_cmd + '\n')
+# Submit the first job and capture its job ID
+job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
+f.write(mstransform_cmd + '\n')
 
     # ------------------------------------------------------------------------------
 

@@ -15,8 +15,7 @@ def generate_mstransform_cmd(casa_container, input_ms, output_dir, numchans, sta
     Returns:
     - cmd: The mstransform command as a string.
     """
-    mstransform_cmd = (
-        f"singularity exec {casa_container} casa mstranform"
+    mstransform_cmd = ("f"singularity exec {casa_container} casa mstranform"
         f"vis = {input_ms}"
         f"outputvis = {output_dir}"
         f"mode = 'channel'"
@@ -24,7 +23,7 @@ def generate_mstransform_cmd(casa_container, input_ms, output_dir, numchans, sta
         f"start = '856MHz'"
         f"width = '1'"
         f"restfreq = '1.420405752GHz'"
-        f"outframe = 'bary'"
+        f"outframe = 'bary'""
     )
     return mstransform_cmd
 
