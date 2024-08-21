@@ -77,9 +77,10 @@ write_slurm(bash_filename = bash_script,
                 email_address = email_address,
                 cmd = mstransform_cmd) 
 
+# f.write(mstransform_cmd + '\n')
+
 # Submit the first job and capture its job ID
-job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
-f.write(mstransform_cmd + '\n')
+# job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 
 # ------------------------------------------------------------------------------
 
