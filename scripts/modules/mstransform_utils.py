@@ -1,8 +1,8 @@
 import sys
 
 input_ms = sys.argv[1]
-numchans = sys.argv[2]
-num_wsclean_runs = sys.argv[3]
+numchans = int(sys.argv[2])
+num_wsclean_runs = int(sys.argv[3])
 print(input_ms, type(input_ms))
 print(numchans, type(numchans))
 print(num_wsclean_runs, type(num_wsclean_runs))
