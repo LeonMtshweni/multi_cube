@@ -22,8 +22,8 @@ wsclean:
 general:
   input_ms: "test.ms"
   total_numchans: 1024
-  numchans: 100
-  num_wsclean_runs: 10
+  numchans: 40#100
+  num_wsclean_runs: 5#10
   numpix: 6000
   pixscale: "1.7asec"
   chanbasename: "channelmap"
