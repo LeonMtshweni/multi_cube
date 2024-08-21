@@ -78,14 +78,8 @@ write_slurm(bash_filename = bash_script,
                 cmd = mstransform_cmd) 
 
 # Submit the first job and capture its job ID
-# job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
-# f.write(mstransform_cmd + '\n')
-
- # slurm job name
-job_id_split = 'split_ms' 
-syscall     = f"{job_id_split}=sbatch {bash_script} | awk '{{print $4}}'"
-# write the syscall command to the submit file
-f.write(syscall+'\n')
+job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
+f.write(mstransform_cmd + '\n')
 
 # ------------------------------------------------------------------------------
 
