@@ -64,6 +64,8 @@ loging_file = os.path.join(outputs, 'mstransform.log')
 submit_file = 'submit_jobs.sh'
 # Open file for writing
 f = open(bash_script,'w')
+# write header information
+f.write('#!/bin/bash\n')
 
 # Run CASA from script
 mstransform_cmd = f"singularity exec {Path(container_base_path, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
@@ -76,8 +78,14 @@ write_slurm(bash_filename = bash_script,
                 cmd = mstransform_cmd) 
 
 # Submit the first job and capture its job ID
-job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
-f.write(mstransform_cmd + '\n')
+# job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
+# f.write(mstransform_cmd + '\n')
+
+ # slurm job name
+job_id_split = 'split_ms' 
+syscall     = f"{job_id_split}=sbatch {bash_script} | awk '{{print $4}}'"
+# write the syscall command to the submit file
+f.write(syscall+'\n')
 
 # ------------------------------------------------------------------------------
 
