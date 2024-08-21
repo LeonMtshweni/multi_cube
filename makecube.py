@@ -9,7 +9,7 @@ from scripts.modules.setup_utils import setup_project_structure
 from scripts.modules.wsclean_utils import generate_wsclean_cmd
 from scripts.modules.bash_utils import write_slurm
 from scripts.modules.cleanup_utils import clean_up_batch_directory
-from scripts.modules.casa_utils import generate_mstransform_cmd
+# from scripts.modules.casa_utils import generate_mstransform_cmd
 
 # Create the output directories
 setup_project_structure()
@@ -56,15 +56,13 @@ extensions_to_delete_r2 = config['general']['extensions_to_delete_r2']
 # Ensure the WSClean output directory exists
 os.makedirs(wsclean_output_dir, exist_ok=True)
 
-# name of the submit file
-submit_file = 'submit_jobs.sh'
-# Open file for writing
-f = open(submit_file,'w')
-
 # create the bash executable
 bash_script = os.path.join(outputs, 'mstransform.sh')
 loging_file = os.path.join(outputs, 'mstransform.log')
 
+# name of the submit file
+submit_file = 'submit_jobs.sh'
+# Open file for writing
 f = open(bash_script,'w')
 
 # Run CASA from script
