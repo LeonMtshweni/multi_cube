@@ -71,7 +71,7 @@ submit_file = 'submit_jobs.sh'
 
 
 # Run CASA from script
-mstransform_cmd = f"singularity exec {Path(container_base_path, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
+mstransform_cmd = f"singularity exec {Path(kern_container, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
 
 # write the slurm file
 write_slurm(bash_filename = bash_script,

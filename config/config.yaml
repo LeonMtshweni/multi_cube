@@ -5,7 +5,7 @@ paths:
   mstransform_output_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
   wsclean_container: "stimela_wsclean_1.6.3.sif"
   kern_container: "/data/exp_soft/containers/kern6-2021-06-11.simg"
-  casa_container: "stimela_casa_1.7.1.sif"
+  casa_container: "casa-stable-6.5.5-21-py3.6.sif"#stimela_casa_1.7.1.sif"
   log_file: "log_makeChanMaps.txt"
 
 wsclean:
