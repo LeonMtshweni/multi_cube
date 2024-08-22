@@ -12,7 +12,7 @@ paths:
 general:
   input_ms: "test.ms"
   numchans: 40
-  num_wsclean_runs: 5
+  num_wsclean_runs: 2
   imfitorder: 4
   extensions_to_delete_r1:
   extensions_to_delete_r2:
