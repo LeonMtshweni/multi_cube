@@ -132,6 +132,23 @@ for item, element in enumerate(range(num_wsclean_runs)):
         gain = config['wsclean']['gain'],
         mgain = config['wsclean']['mgain'])
     
+    # write the slurm file
+    write_slurm(bash_filename = os.path.join(job_files, f"wsclean_{item}.sh"),
+                    jobname = f"wsclean_{item}",
+                    logfile = loging_file,
+                    email_address = email_address,
+                    cmd = wsclean_cmd,
+                    time = wall_time,
+                    partition = partition,
+                    ntasks = ntasks,
+                    nodes = nodes,
+                    cpus = cpus,
+                    mem = mem)
+    
+    # Submit each independent job
+    independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} job_script_{item+2}.sh | awk '{{print $4}}'").read().strip()
+    
+    
 #     print(wsclean_cmd)
 #     os.system(wsclean_cmd)
 
@@ -157,9 +174,9 @@ for item, element in enumerate(range(num_wsclean_runs)):
 #     os.system(imcontsub_cmd)
 
 # Spawn n independent jobs after the first job completes
-for item in range(num_wsclean_runs):
-    # Submit each independent job
-    independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} job_script_{item+2}.sh | awk '{{print $4}}'").read().strip()
+# for item in range(num_wsclean_runs):
+#     # Submit each independent job
+#     independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} job_script_{item+2}.sh | awk '{{print $4}}'").read().strip()
     
 #         # Submit a dependent job that depends on the completion of the corresponding independent job
 #         dependent_job_id = os.popen(f"sbatch --dependency=afterok:{independent_job_id} dependent_job_script_{i+2}.sh | awk '{{print $4}}'").read().strip()
