@@ -146,7 +146,7 @@ for item, element in enumerate(range(num_wsclean_runs)):
                     mem = mem)
     
     # Submit each independent job
-    independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} job_script_{item+2}.sh | awk '{{print $4}}'").read().strip()
+    independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} wsclean_{item}.sh | awk '{{print $4}}'").read().strip()
     
     
 #     print(wsclean_cmd)
