@@ -22,6 +22,17 @@ def setup_project_structure():
         os.path.join(parent_dir, 'outputs'),
         os.path.join(parent_dir, 'inputs')
     ]
-    
+
     # Create directories
     create_directories(directories)
+
+def setup_msdir_structure(num_wsclean_runs, numchans, msdir):
+    """
+    Set up the msdir structure by creating necessary directories in the msdir directory.
+    """
+    for item, element in enumerate(range(num_wsclean_runs)):
+
+        directory = os.path.join(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}")
+
+        # Create directories
+        create_directories(directory)

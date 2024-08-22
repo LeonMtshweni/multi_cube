@@ -6,6 +6,7 @@ import glob
 from pathlib import Path
 
 from scripts.modules.setup_utils import setup_project_structure
+from scripts.modules.setup_utils import setup_msdir_structure
 from scripts.modules.wsclean_utils import generate_wsclean_cmd
 from scripts.modules.bash_utils import write_slurm
 from scripts.modules.cleanup_utils import clean_up_batch_directory
@@ -26,6 +27,7 @@ msdir = os.path.join(current_dir, 'msdir')
 outputs = os.path.join(current_dir, 'outputs')
 inputs = os.path.join(current_dir, 'inputs')
 modules = os.path.join(current_dir, 'scripts/modules')
+
 
 # Load the configuration file
 with open('config/config.yaml', 'r') as file:
@@ -60,16 +62,11 @@ extensions_to_delete_r2 = config['general']['extensions_to_delete_r2']
 os.makedirs(wsclean_output_dir, exist_ok=True)
 
 # create the bash executable
-bash_script = 'mstransform.sh' #os.path.join(outputs, 'mstransform.sh')
-loging_file = 'mstransform.log' #os.path.join(outputs, 'mstransform.log')
+bash_script = os.path.join(outputs, 'mstransform.sh')
+loging_file = os.path.join(outputs, 'mstransform.log')
 
-# name of the submit file
-submit_file = 'submit_jobs.sh'
-# Open file for writing
-# f = open(bash_script,'w')
-# write header information
-# f.write('#!/bin/bash\n')
-
+# Create the batch file directories in the msdir directory
+setup_msdir_structure(num_wsclean_runs, numchans, msdir)
 
 # Run CASA from script
 mstransform_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
@@ -86,25 +83,11 @@ write_slurm(bash_filename = bash_script,
 # Submit the first job and capture its job ID
 job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 
-# ------------------------------------------------------------------------------
-
-# Generate and run mstransform command
-# mstransform_cmd = generate_mstransform_cmd(
-#                     mstransform_container,
-#                     batch_dir_name,
-#                     os.path.join(batch_dir_name, '.ms'),
-#                     numchans,
-#                     start_chan,
-#                     end_chan)
-#                     # config['mstransform']['script'],
-#                     # config['mstransform']['output_format'],
-#                     # config['mstransform']['field_id'],
-#                     # config['mstransform']['spw'],
-#                     # config['mstransform']['outframe'])
-                                                    
 #-------------------------------------------------------------------------------
 
-# Process each batch
+# for item, element in enumerate(range(num_wsclean_runs)):
+
+# # Process each batch
 # for batch_i in range(1, num_wsclean_runs + 1):
 #     start_chan = (batch_i - 1) * numchans
 #     end_chan = batch_i * numchans - 1

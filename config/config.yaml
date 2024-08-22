@@ -19,6 +19,8 @@ wsclean:
   gain: 0.1
   mgain: 0.95
 
+
+
 general:
   input_ms: "test.ms"
   total_numchans: 1024
