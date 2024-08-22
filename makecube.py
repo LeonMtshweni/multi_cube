@@ -33,6 +33,7 @@ modules = os.path.join(current_dir, 'scripts/modules')
 with open('config/config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
+#-------------------------------------------------------------------------------
 # Paths and parameters from config
 container_base_path = config['paths']['container_base_path']
 container_base_path_ii = config['paths']['container_base_path_ii']
@@ -45,7 +46,11 @@ mstransform_container = config['paths']['casa_container']
 kern_container = config['paths']['kern_container']
 casa_container = config['paths']['casa_container']
 log_file = config['paths']['log_file']
+#-------------------------------------------------------------------------------
 
+
+#-------------------------------------------------------------------------------
+# GENERAL CONFIG PARAMATERS
 total_numchans = config['general']['total_numchans']
 numchans = config['general']['numchans']
 num_wsclean_runs = config['general']['num_wsclean_runs']
@@ -57,6 +62,18 @@ email_address = config['general']['email_address']
 imfitorder = config['general']['imfitorder']
 extensions_to_delete_r1 = config['general']['extensions_to_delete_r1']
 extensions_to_delete_r2 = config['general']['extensions_to_delete_r2']
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+# SLURM RESOURCE ALLOCATION
+wall_time = config['compute']['time']
+partition = config['compute']['partition']
+ntasks = config['compute']['ntasks']
+nodes = config['compute']['nodes']
+cpus = config['compute']['cpus']
+mem = config['compute']['mem']
+#-------------------------------------------------------------------------------
 
 # Ensure the WSClean output directory exists
 os.makedirs(wsclean_output_dir, exist_ok=True)
@@ -69,14 +86,20 @@ loging_file = os.path.join(outputs, 'mstransform.log')
 setup_msdir_structure(num_wsclean_runs, numchans, msdir)
 
 # Run CASA from script
-mstransform_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} --nologger --log2term --nogui\n"
+mstransform_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} {msdir} --nologger --log2term --nogui\n"
 
 # write the slurm file
 write_slurm(bash_filename = bash_script,
                 jobname = 'split_ms',
                 logfile = loging_file,
                 email_address = email_address,
-                cmd = mstransform_cmd) 
+                cmd = mstransform_cmd,
+                time = wall_time,
+                partition = partition,
+                ntasks = ntasks,
+                nodes = nodes,
+                cpus = cpus,
+                mem = mem)
 
 # f.write(mstransform_cmd + '\n')
 

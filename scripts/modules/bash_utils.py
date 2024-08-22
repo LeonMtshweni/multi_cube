@@ -4,12 +4,12 @@ def write_slurm(bash_filename,
                 logfile,
                 cmd,
                 email_address,
-                time='72:00:00',  
-                partition='Main',
-                ntasks='1',
-                nodes='1',
-                cpus='32',
-                mem='128GB'):
+                time,  
+                partition,
+                ntasks,
+                nodes,
+                cpus,
+                mem):
 
     f = open(bash_filename,'w')
 

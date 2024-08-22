@@ -9,18 +9,6 @@ paths:
   casa_container: "casa-stable-6.5.5-21-py3.6.sif"#stimela_casa_1.7.1.sif"
   log_file: "log_makeChanMaps.txt"
 
-wsclean:
-  local_rms: "MK-SPT-P045-1k.ms.contsub"
-  memory: "95"
-  weight: "briggs -0.5"
-  niter: 1
-  auto_threshold: 0.5
-  auto_mask: 4
-  gain: 0.1
-  mgain: 0.95
-
-
-
 general:
   input_ms: "test.ms"
   total_numchans: 1024
@@ -37,3 +25,21 @@ general:
     - "*.linefile"
     - "*.contfile"
     - "*-image.fits"
+
+  compute:
+    time: '01:00:00'
+    partition: 'Main'
+    ntasks: '1'
+    nodes: '1'
+    cpus: '8'
+    mem: '10GB'
+
+  wsclean:
+  local_rms: "MK-SPT-P045-1k.ms.contsub"
+  memory: "95"
+  weight: "briggs -0.5"
+  niter: 1
+  auto_threshold: 0.5
+  auto_mask: 4
+  gain: 0.1
+  mgain: 0.95
