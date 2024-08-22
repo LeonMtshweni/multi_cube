@@ -33,7 +33,7 @@ def setup_msdir_structure(num_wsclean_runs, numchans, msdir):
     """
     for item, element in enumerate(range(num_wsclean_runs)):
 
-        directory = os.path.join(Path(msdir), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}")
+        directory = Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}")
 
         # Create directories
         create_directories(directory)
