@@ -13,6 +13,6 @@ print(num_wsclean_runs, type(num_wsclean_runs))
 for item, element in enumerate(range(num_wsclean_runs)):
     mstransform(vis = input_ms,
                 datacolumn = "data",
-                outputvis = Path(Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}"), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms"),
+                outputvis = str(Path(Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}"), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms")),
                 nchan = numchans,
                 spw = f"0:{item*numchans}")
