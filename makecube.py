@@ -131,7 +131,7 @@ for item, element in enumerate(range(num_wsclean_runs)):
         auto_mask = config['wsclean']['auto_mask'],
         gain = config['wsclean']['gain'],
         mgain = config['wsclean']['mgain'])
-    
+
     # write the slurm file
     write_slurm(bash_filename = os.path.join(job_files, f"wsclean_{item}.sh"),
                     jobname = f"wsclean_{item}",
@@ -145,10 +145,12 @@ for item, element in enumerate(range(num_wsclean_runs)):
                     cpus = cpus,
                     mem = mem)
     
+    # numbered bash file
+    itemised_bash_file = os.path.join(job_files, f"wsclean_{item}.sh")
+    
     # Submit each independent job
-    independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} {str(os.path.join(job_files, f"wsclean_{item}.sh"))} | awk '{{print $4}}'").read().strip()
-    
-    
+    independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} itemised_bash_file | awk '{{print $4}}'").read().strip()
+
 #     print(wsclean_cmd)
 #     os.system(wsclean_cmd)
 
