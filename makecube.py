@@ -146,7 +146,7 @@ for item, element in enumerate(range(num_wsclean_runs)):
                     mem = mem)
     
     # numbered bash file
-    itemised_bash_file = os.path.join(job_files, f"wsclean_{item}.sh")
+    itemised_bash_file = str(Path(job_files, f"wsclean_{item}.sh"))
     
     # Submit each independent job
     independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} itemised_bash_file | awk '{{print $4}}'").read().strip()
