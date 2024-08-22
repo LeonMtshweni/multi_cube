@@ -28,7 +28,7 @@ outputs = os.path.join(current_dir, 'outputs')
 inputs = os.path.join(current_dir, 'inputs')
 modules = os.path.join(current_dir, 'scripts/modules')
 job_files = os.path.join(current_dir, 'job_files')
-log_files = os.path.join(current_dir, 'job_files')
+log_files = os.path.join(current_dir, 'log_files')
 
 
 # Load the configuration file
@@ -36,7 +36,7 @@ with open('config/config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 #-------------------------------------------------------------------------------
-# Paths and parameters from config
+# PATH CONFIG PARAMETERS
 container_base_path = config['paths']['container_base_path']
 container_base_path_ii = config['paths']['container_base_path_ii']
 base_data_dir = config['paths']['base_data_dir']
@@ -50,22 +50,22 @@ casa_container = config['paths']['casa_container']
 log_file = config['paths']['log_file']
 #-------------------------------------------------------------------------------
 
+#-------------------------------------------------------------------------------
+# WSCLEAN CONFIG PARAMETERS
+numpix = config['wsclean']['numpix']
+pixscale = config['wsclean']['pixscale']
+chanbasename = config['wsclean']['chanbasename']
+cubebasename = config['wsclean']['cubebasename']
+#-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # GENERAL CONFIG PARAMATERS
-total_numchans = config['general']['total_numchans']
 numchans = config['general']['numchans']
 num_wsclean_runs = config['general']['num_wsclean_runs']
-numpix = config['general']['numpix']
-pixscale = config['general']['pixscale']
-chanbasename = config['general']['chanbasename']
-cubebasename = config['general']['cubebasename']
-email_address = config['general']['email_address']
 imfitorder = config['general']['imfitorder']
 extensions_to_delete_r1 = config['general']['extensions_to_delete_r1']
 extensions_to_delete_r2 = config['general']['extensions_to_delete_r2']
 #-------------------------------------------------------------------------------
-
 
 #-------------------------------------------------------------------------------
 # SLURM RESOURCE ALLOCATION
@@ -75,6 +75,7 @@ ntasks = config['compute']['ntasks']
 nodes = config['compute']['nodes']
 cpus = config['compute']['cpus']
 mem = config['compute']['mem']
+email_address = config['compute']['email_address']
 #-------------------------------------------------------------------------------
 
 # Ensure the WSClean output directory exists
@@ -110,35 +111,26 @@ job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 
 #-------------------------------------------------------------------------------
 
-# for item, element in enumerate(range(num_wsclean_runs)):
-
-# # Process each batch
-# for batch_i in range(1, num_wsclean_runs + 1):
-#     start_chan = (batch_i - 1) * numchans
-#     end_chan = batch_i * numchans - 1
-#     batch_dir_name = f'batch_{batch_i:02d}_chans{start_chan:05d}-{end_chan:05d}'
-    
-#     os.makedirs(batch_dir_name, exist_ok=True)
-    
-#     # Generate WSClean command
-#     wsclean_cmd = generate_wsclean_cmd(
-#         wsclean_container,
-#         os.path.join(wsclean_output_dir, chanbasename),
-#         numpix,
-#         pixscale,
-#         start_chan,
-#         end_chan,
-#         numchans,
-#         ms_file,
-#         log_file,
-#         config['wsclean']['memory'],
-#         config['wsclean']['weight'],
-#         config['wsclean']['niter'],
-#         config['wsclean']['auto_threshold'],
-#         config['wsclean']['auto_mask'],
-#         config['wsclean']['gain'],
-#         config['wsclean']['mgain']
-#     )
+for item, element in enumerate(range(num_wsclean_runs)):
+        
+    # Generate WSClean command
+    wsclean_cmd = generate_wsclean_cmd(
+        wsclean_container = Path(container_base_path, wsclean_container),
+        chanbasename = chanbasename,
+        numpix = numpix,
+        pixscale = pixscale,
+        start_chan = (item - 1) * numchans,
+        end_chan = item * numchans - 1,
+        numchans = numchans,
+        ms_file = str(Path(Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}"), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms")),
+        log_file = os.path.join(log_files, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.log"),
+        memory = config['wsclean']['memory'],
+        weight = config['wsclean']['weight'],
+        niter = config['wsclean']['niter'],
+        auto_threshold = config['wsclean']['auto_threshold'],
+        auto_mask = config['wsclean']['auto_mask'],
+        gain = config['wsclean']['gain'],
+        mgain = config['wsclean']['mgain'])
     
 #     print(wsclean_cmd)
 #     os.system(wsclean_cmd)
@@ -164,11 +156,11 @@ job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 #     print(imcontsub_cmd)
 #     os.system(imcontsub_cmd)
 
-#     # Spawn 10 independent jobs after the third job completes
-#     for i in range(10):
-#         # Submit each independent job
-#         independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} job_script_{i+2}.sh | awk '{{print $4}}'").read().strip()
-        
+# Spawn n independent jobs after the first job completes
+for item in range(num_wsclean_runs):
+    # Submit each independent job
+    independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} job_script_{item+2}.sh | awk '{{print $4}}'").read().strip()
+    
 #         # Submit a dependent job that depends on the completion of the corresponding independent job
 #         dependent_job_id = os.popen(f"sbatch --dependency=afterok:{independent_job_id} dependent_job_script_{i+2}.sh | awk '{{print $4}}'").read().strip()
         

@@ -11,16 +11,10 @@ paths:
 
 general:
   input_ms: "test.ms"
-  total_numchans: 1024
   numchans: 40
   num_wsclean_runs: 5
-  numpix: 6000
-  pixscale: "1.7asec"
-  chanbasename: "channelmap"
-  cubebasename: "cube_MK-SPT-P045-1k.ms.contsub.fits"
   imfitorder: 4
   extensions_to_delete_r1:
-  email_address:
   extensions_to_delete_r2:
     - "*.linefile"
     - "*.contfile"
@@ -33,8 +27,11 @@ compute:
   nodes: '1'
   cpus: '8'
   mem: '10GB'
+  email_address:
 
 wsclean:
+  chanbasename: "channel_map"
+  cubebasename: "cube_MK-SPT-P045-1k.ms.contsub.fits"
   local_rms: "MK-SPT-P045-1k.ms.contsub"
   memory: "95"
   weight: "briggs -0.5"
@@ -43,3 +40,5 @@ wsclean:
   auto_mask: 4
   gain: 0.1
   mgain: 0.95
+  numpix: 6000
+  pixscale: "1.7asec"
