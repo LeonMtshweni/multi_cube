@@ -31,9 +31,14 @@ def setup_msdir_structure(num_wsclean_runs, numchans, msdir):
     """
     Set up the msdir structure by creating necessary directories in the msdir directory.
     """
+    # Create an empty list to hold the batch directory names
+    directories = list()
+
     for item, element in enumerate(range(num_wsclean_runs)):
 
         directory = Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}")
 
-        # Create directories
-        create_directories(directory)
+        directories.append(directory)
+
+    # Create directories
+    create_directories(directories)
