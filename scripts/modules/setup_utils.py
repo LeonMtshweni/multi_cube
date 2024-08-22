@@ -20,8 +20,10 @@ def setup_project_structure():
     parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
     directories = [
         os.path.join(parent_dir, 'msdir'),
-        os.path.join(parent_dir, 'outputs'),
-        os.path.join(parent_dir, 'inputs')
+        os.path.join(parent_dir, 'outputs'), 
+        os.path.join(parent_dir, 'inputs'),
+        os.path.join(parent_dir, 'job_files'),
+        os.path.join(parent_dir, 'log_files')
     ]
 
     # Create directories

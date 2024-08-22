@@ -27,6 +27,8 @@ msdir = os.path.join(current_dir, 'msdir')
 outputs = os.path.join(current_dir, 'outputs')
 inputs = os.path.join(current_dir, 'inputs')
 modules = os.path.join(current_dir, 'scripts/modules')
+job_files = os.path.join(current_dir, 'job_files')
+log_files = os.path.join(current_dir, 'job_files')
 
 
 # Load the configuration file
@@ -79,8 +81,8 @@ mem = config['compute']['mem']
 os.makedirs(wsclean_output_dir, exist_ok=True)
 
 # create the bash executable
-bash_script = os.path.join(outputs, 'mstransform.sh')
-loging_file = os.path.join(outputs, 'mstransform.log')
+bash_script = os.path.join(job_files, 'mstransform.sh')
+loging_file = os.path.join(log_files, 'mstransform.log')
 
 # Create the batch file directories in the msdir directory
 setup_msdir_structure(num_wsclean_runs, numchans, msdir)
