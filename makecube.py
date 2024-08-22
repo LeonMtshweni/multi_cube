@@ -119,8 +119,8 @@ for item, element in enumerate(range(num_wsclean_runs)):
         chanbasename = chanbasename,
         numpix = numpix,
         pixscale = pixscale,
-        start_chan = (item - 1) * numchans,
-        end_chan = item * numchans - 1,
+        start_chan = item*numchans
+        end_chan = (item+1)*numchans,
         numchans = numchans,
         ms_file = str(Path(Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}"), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms")),
         log_file = os.path.join(log_files, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.log"),
