@@ -26,15 +26,15 @@ general:
     - "*.contfile"
     - "*-image.fits"
 
-  compute:
-    time: '01:00:00'
-    partition: 'Main'
-    ntasks: '1'
-    nodes: '1'
-    cpus: '8'
-    mem: '10GB'
+compute:
+  time: '1:00:00'
+  partition: 'Main'
+  ntasks: '1'
+  nodes: '1'
+  cpus: '8'
+  mem: '10GB'
 
-  wsclean:
+wsclean:
   local_rms: "MK-SPT-P045-1k.ms.contsub"
   memory: "95"
   weight: "briggs -0.5"
