@@ -1,6 +1,6 @@
 import os
 
-def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, start_chan, end_chan, numchans, ms_file, log_file, memory, weight, niter, auto_threshold, auto_mask, gain, mgain):
+def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, start_chan, end_chan, chans_out, ms_file, log_file, memory, weight, niter, auto_threshold, auto_mask, gain, mgain):
     """Generate the WSClean command."""
     return (
         f"singularity exec {wsclean_container} wsclean "
@@ -9,8 +9,8 @@ def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, star
         f"-weight {weight} "
         f"-size {numpix} {numpix} "
         f"-scale {pixscale} "
-        f"-channel-range {start_chan} {end_chan} "
-        f"-channels-out {numchans} "
+        f"-channel-range {start_chan} {end_chan}"
+        f"-channels-out {chans_out} "
         f"-data-column DATA "
         f"-no-dirty "
         f"-niter {niter} "

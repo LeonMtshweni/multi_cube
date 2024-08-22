@@ -121,7 +121,7 @@ for item, element in enumerate(range(num_wsclean_runs)):
         pixscale = pixscale,
         start_chan = item*numchans,
         end_chan = (item+1)*numchans,
-        numchans = numchans,
+        chans_out = num_wsclean_runs,
         ms_file = str(Path(Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}"), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms")),
         log_file = os.path.join(log_files, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.log"),
         memory = config['wsclean']['memory'],
