@@ -111,7 +111,21 @@ job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 
 #-------------------------------------------------------------------------------
 
+# Calculate the number of channels per run
+channels_per_run = numchans // num_wsclean_runs
+remainder_channels = numchans % num_wsclean_runs
+
+start_channel = 1
+
+# get flag summart from CASA flagdata
 for item, element in enumerate(range(num_wsclean_runs)):
+
+    # Calculate the end channel for this run
+    end_channel = start_channel + channels_per_run
+
+    # Distribute the remainder channels
+    if item < remainder_channels:
+        end_channel += 1
         
     # Generate WSClean command
     wsclean_cmd = generate_wsclean_cmd(
@@ -122,7 +136,7 @@ for item, element in enumerate(range(num_wsclean_runs)):
         start_chan = item*numchans,
         end_chan = (item+1)*numchans,
         chans_out = num_wsclean_runs,
-        ms_file = str(Path(Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}"), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms")),
+        ms_file = str(Path(Path(msdir, f"batch_{item}_chans{start_channel}-{end_channel}"), f"batch_{item}_chans{start_channel}-{end_channel}.ms")),
         log_file = os.path.join(log_files, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.log"),
         memory = config['wsclean']['memory'],
         weight = config['wsclean']['weight'],
@@ -150,6 +164,9 @@ for item, element in enumerate(range(num_wsclean_runs)):
     
     # Submit each independent job
     independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} {itemised_bash_file} | awk '{{print $4}}'").read().strip()
+
+    # Set the start channel for the next run
+    start_channel = end_channel
 
 #     print(wsclean_cmd)
 #     os.system(wsclean_cmd)

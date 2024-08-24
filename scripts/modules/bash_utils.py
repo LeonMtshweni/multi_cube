@@ -26,7 +26,7 @@ def write_slurm(bash_filename,
         f'#SBATCH --mail-user={email_address}\n',
         f'#SBATCH --mail-type=END,FAIL,TIME_LIMIT\n',
         f'#SBATCH --output={logfile}\n',
-        f'#SBATCH --error=./logs/{jobname}_std_err.log\n',
+        f'#SBATCH --error=./error_logfile/{jobname}_std_err.log\n',
         f'{cmd}\n',
         'sleep 10\n'
     ])
