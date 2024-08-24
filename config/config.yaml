@@ -18,8 +18,8 @@ general:
     - "*-psf.fits"
     - "*-model.fits"
     - "*-residual.fits"
-    - "*-dirty.fits'
-    - "-MFS-*.fits'
+    - "*-dirty.fits"
+    - "-MFS-*.fits"
   extensions_to_delete_r2:
     - "*.linefile"
     - "*.contfile"
