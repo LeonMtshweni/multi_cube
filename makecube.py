@@ -186,13 +186,6 @@ def main():
         start_channel = end_channel
 
     #-------------------------------------------------------------------------------
-    # remove without spawning a SLURM job (probs a bad idea, but fuck it)
-
-    for ext in extensions_to_delete_r1:
-        
-        os.system('rm %s'%(os.path.join(batch_dir_name,chanbasename) + ext)) # delete the unwanted MFS map
-
-    #-------------------------------------------------------------------------------
 
     # Calculate the number of channels per run
     channels_per_run = numchans // num_wsclean_runs

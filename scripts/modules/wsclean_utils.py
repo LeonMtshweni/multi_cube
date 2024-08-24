@@ -12,6 +12,7 @@ def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, star
         f"-scale {pixscale} "
         f"-channel-range {start_chan} {end_chan} "
         f"-channels-out {chans_out} "
+        f"-no-mf-weighting "
         f"-data-column DATA "
         f"-no-dirty "
         f"-niter {niter} "

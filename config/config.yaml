@@ -15,6 +15,11 @@ general:
   num_wsclean_runs: 2
   imfitorder: 4
   extensions_to_delete_r1:
+    - '*-psf.fits'
+    - '*-model.fits'
+    - '*-residual.fits',
+    - '*-dirty.fits'
+    - '-MFS-*.fits'
   extensions_to_delete_r2:
     - "*.linefile"
     - "*.contfile"
