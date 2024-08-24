@@ -1,12 +1,10 @@
 # multi_cube
 
-=====
-
-A convenience tool that orchestrates the parallel (per user specified bandwidth) generation of FITS cubes from a continuum subtracted ms file
+A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum subtracted ms file.
 
 Requirements
 ------------
-This tool requires slurm as jobs are submited in unison. I developed and tested with PythonPython 3.12.1. Add info about requirements.txt
+This tool requires slurm as jobs are submited in unison. I developed and tested with Python 3.12.1. on the [ILIFU](https://www.ilifu.ac.za/) research cloud instrastucture (hosted by [IDIA](https://idia.ac.za/)). Add info about requirements.txt
 
 Installation
 ------------

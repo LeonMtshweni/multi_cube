@@ -10,8 +10,6 @@ msdir = Path(sys.argv[4])
 channels_per_run = numchans // num_wsclean_runs
 remainder_channels = numchans % num_wsclean_runs
 
-channel_ranges = []
-
 start_channel = 1
 
 # get flag summart from CASA flagdata
@@ -23,15 +21,12 @@ for item, element in enumerate(range(num_wsclean_runs)):
     # Distribute the remainder channels
     if item < remainder_channels:
         end_channel += 1
-
-    # Store the range (lower and upper bounds)
-    channel_ranges.append((start_channel, end_channel - 1))
-
-    # Set the start channel for the next run
-    start_channel = end_channel
     
     mstransform(vis = input_ms,
                 datacolumn = "data",
-                outputvis = str(Path(Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}"), f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}.ms")),
+                outputvis = str(Path(Path(msdir, f"batch_{item}_chans{start_channel}-{end_channel}"), f"batch_{item}_chans{start_channel}-{end_channel}.ms")),
                 nchan = numchans,
                 spw = f"0:{start_channel}~{end_channel}")
+    
+    # Set the start channel for the next run
+    start_channel = end_channel

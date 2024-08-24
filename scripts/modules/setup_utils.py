@@ -36,11 +36,28 @@ def setup_msdir_structure(num_wsclean_runs, numchans, msdir):
     # Create an empty list to hold the batch directory names
     directories = list()
 
+    # Calculate the number of channels per run
+    channels_per_run = numchans // num_wsclean_runs
+    remainder_channels = numchans % num_wsclean_runs
+
+    start_channel = 1
+
+    # get flag summart from CASA flagdata
     for item, element in enumerate(range(num_wsclean_runs)):
 
-        directory = Path(msdir, f"batch_{item}_chans{item*numchans}-{(item+1)*numchans}")
+        # Calculate the end channel for this run
+        end_channel = start_channel + channels_per_run
+
+        # Distribute the remainder channels
+        if item < remainder_channels:
+            end_channel += 1
+
+        directory = Path(msdir, f"batch_{item}_chans{start_channel}-{end_channel}")
 
         directories.append(directory)
+
+        # Set the start channel for the next run
+        start_channel = end_channel
 
     # Create directories
     create_directories(directories)
