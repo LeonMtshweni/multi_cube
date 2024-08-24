@@ -21,7 +21,7 @@ general:
     - "*-image.fits"
 
 compute:
-  time: '5:00:00'
+  time: '10:00:00'
   partition: 'Main'
   ntasks: '4'
   nodes: '4'

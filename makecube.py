@@ -11,6 +11,7 @@ from scripts.modules.setup_utils import setup_output_structure
 from scripts.modules.setup_utils import count_inclusive
 from scripts.modules.wsclean_utils import generate_wsclean_cmd
 from scripts.modules.bash_utils import write_slurm
+from scripts.modules.stack_fits import stack_these_fits
 from scripts.modules.cleanup_utils import clean_up_batch_directory
 # from scripts.modules.casa_utils import generate_mstransform_cmd
 
@@ -141,7 +142,7 @@ def main():
         # Generate WSClean command
         wsclean_cmd = generate_wsclean_cmd(
             wsclean_container = Path(container_base_path, wsclean_container),
-            chanbasename = Path(Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}"), chanbasename),
+            chanbasename = Path(Path(outputs, f"wsclean_{item}_chans{start_channel}-{end_channel}"), chanbasename),
             numpix = numpix,
             pixscale = pixscale,
             start_chan = start_channel,
@@ -179,40 +180,105 @@ def main():
         # Set the start channel for the next run
         start_channel = end_channel
 
+    #-------------------------------------------------------------------------------
+
+    # Calculate the number of channels per run
+    channels_per_run = numchans // num_wsclean_runs
+    remainder_channels = numchans % num_wsclean_runs
+
+    start_channel = 1
+
+    # get flag summart from CASA flagdata
+    for item, element in enumerate(range(num_wsclean_runs)):
+
+        # create the bash executable
+        loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
+
+        # Calculate the end channel for this run
+        end_channel = start_channel + channels_per_run
+
+        # Distribute the remainder channels
+        if item < remainder_channels:
+            end_channel += 1
+
+        # name of the directory containing the base fits images
+        batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
+
+        # Name of the output cube
+        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
+
+        # generate command for fitstool.py
+        stack_cmd = stack_these_fits(kern_container, batch_cubename, batch_dir_name, chanbasename)
+
+        # write the slurm file
+        write_slurm(bash_filename = os.path.join(job_files, f"fitstool_{item}.sh"),
+                        jobname = f"fitstool_{item}",
+                        logfile = loging_file,
+                        email_address = email_address,
+                        cmd = stack_cmd,
+                        time = wall_time,
+                        partition = partition,
+                        ntasks = ntasks,
+                        nodes = nodes,
+                        cpus = cpus,
+                        mem = mem)
+
+        # numbered bash file from current jobs
+        itemised_bash_file_ii = str(Path(job_files, f"fitstool_{item}.sh"))
+        
+        # numbered bash file from previous jobs
+        itemised_bash_file = str(Path(job_files, f"wsclean_{item}.sh"))
+
+        # spawn jobs - fitstool
+        dependent_job_id_ii = os.popen(f"sbatch --dependency=afterok:{itemised_bash_file} {itemised_bash_file_ii}").read().strip()
+
+        # Set the start channel for the next run
+        start_channel = end_channel
+
+    #-------------------------------------------------------------------------------
+
+    # # Calculate the number of channels per run
+    # channels_per_run = numchans // num_wsclean_runs
+    # remainder_channels = numchans % num_wsclean_runs
+
+    # start_channel = 1
+
+    # # get flag summart from CASA flagdata
+    # for item, element in enumerate(range(num_wsclean_runs)):
+
+    #     # Calculate the end channel for this run
+    #     end_channel = start_channel + channels_per_run
+
+    #     # Distribute the remainder channels
+    #     if item < remainder_channels:
+    #         end_channel += 1
+
+    #     imcontsub_cmd = 'singularity exec ~/containers/casa-1.7.0.simg casa -c casa_imcontsub.py --logfile logfile-imcontsub.log --nogui mycube=%s imfitorder=%i'%(batch_cubename,imfitorder)
+
+    #     # write the slurm file
+    #     write_slurm(bash_filename = os.path.join(job_files, f"imcontsub_{item}.sh"),
+    #                     jobname = f"imcontsub_{item}",
+    #                     logfile = loging_file,
+    #                     email_address = email_address,
+    #                     cmd = imcontsub_cmd,
+    #                     time = wall_time,
+    #                     partition = partition,
+    #                     ntasks = ntasks,
+    #                     nodes = nodes,
+    #                     cpus = cpus,
+    #                     mem = mem)
+
+    #     # numbered bash file from current jobs
+    #     itemised_bash_file_iii = str(Path(job_files, f"imcontsub_{item}.sh"))
+        
+    #     # numbered bash file from previous jobs
+    #     itemised_bash_file_ii = str(Path(job_files, f"fitstool_{item}.sh"))
+
+    #     # spawn jobs - imcontsub casa
+    #     dependent_job_id_iii = os.popen(f"sbatch --dependency=afterok:{itemised_bash_file_ii} {itemised_bash_file_iii}").read().strip()
+
+    #     # Set the start channel for the next run
+    #     start_channel = end_channel
 
 if __name__ == '__main__':
     main()
-#     print(wsclean_cmd)
-#     os.system(wsclean_cmd)
-
-#     # Clean up unwanted files
-#     clean_up_batch_directory(batch_dir_name, extensions_to_delete_r1, extensions_to_delete_r2)
-
-#     # Create the cube
-#     batch_cubename = os.path.join(batch_dir_name, cubebasename.replace('.fits', f'_{batch_dir_name}.fits'))
-#     glue_cube_cmd = (
-#         f"{config['fitstool']['stack_cmd'].format(kern_container=kern_container)} {batch_cubename}:FREQ "
-#         f"{os.path.join(batch_dir_name, chanbasename)}*-image.fits"
-#     )
-#     print(glue_cube_cmd)
-#     os.system(glue_cube_cmd)
-
-#     # Perform continuum subtraction
-#     imcontsub_cmd = (
-#         f"singularity exec {casa_container} casa -c {config['casa']['script']} "
-#         f"--logfile {config['casa']['log_file']} {config['casa']['nogui']} "
-#         f"mycube={batch_cubename} imfitorder={imfitorder}"
-#     )
-#     print(imcontsub_cmd)
-#     os.system(imcontsub_cmd)
-
-# Spawn n independent jobs after the first job completes
-# for item in range(num_wsclean_runs):
-#     # Submit each independent job
-#     independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} job_script_{item+2}.sh | awk '{{print $4}}'").read().strip()
-    
-#         # Submit a dependent job that depends on the completion of the corresponding independent job
-#         dependent_job_id = os.popen(f"sbatch --dependency=afterok:{independent_job_id} dependent_job_script_{i+2}.sh | awk '{{print $4}}'").read().strip()
-        
-#         print(f"Independent job {i+4} submitted with job ID: {independent_job_id}")
-#         print(f"Dependent job {i+4} submitted with job ID: {dependent_job_id}")
