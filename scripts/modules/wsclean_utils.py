@@ -1,10 +1,11 @@
 import os
+from pathlib import Path
 
 def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, start_chan, end_chan, chans_out, ms_file, log_file, memory, weight, niter, auto_threshold, auto_mask, gain, mgain):
     """Generate the WSClean command."""
     return (
         f"singularity exec {wsclean_container} wsclean "
-        f"-name {os.path.join(chanbasename)} "
+        f"-name {Path(chanbasename)} "
         f"-mem {memory} "
         f"-weight {weight} "
         f"-size {numpix} {numpix} "

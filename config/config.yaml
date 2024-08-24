@@ -21,12 +21,12 @@ general:
     - "*-image.fits"
 
 compute:
-  time: '1:00:00'
+  time: '5:00:00'
   partition: 'Main'
-  ntasks: '1'
-  nodes: '1'
-  cpus: '8'
-  mem: '10GB'
+  ntasks: '4'
+  nodes: '4'
+  cpus: '16'
+  mem: '50GB'
   email_address:
 
 wsclean:
@@ -42,3 +42,13 @@ wsclean:
   mgain: 0.95
   numpix: 6000
   pixscale: "1.7asec"
+  noupdatemodelrequired: True # true means model no updated and false means we're allowing the model to update
+
+
+
+
+  """
+  taken from my CARACal runs - probably the better parameters to use as defaults?
+  WARNING: Overriding HOME environment variable with SINGULARITYENV_HOME is not permitted
+running WSClean: wsclean -name /stimela_mount/output/cubes/cube_1/Split10MHz32kDataCorrectedHIRange_J2018_5539_HI_1 -mem 100 -no-update-model-required -weight briggs 2.000 -taper-gaussian 0.0 -size 900 900 -scale 2.0asec -channels-out 381 -pol I -channel-range 0 381 -niter 2000000 -auto-threshold 0.5 -auto-mask 10.0 -gain 0.1 -mgain 1.0 -multiscale-scale-bias 0.6 -padding 1.2 /stimela_mount/msdir/1582940762_sdp_l0_HI_10MHz-J2018_5539-corr_mst.ms
+"""
