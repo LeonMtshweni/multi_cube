@@ -61,3 +61,11 @@ def setup_msdir_structure(num_wsclean_runs, numchans, msdir):
 
     # Create directories
     create_directories(directories)
+
+# Inclusive count
+def count_inclusive(start, end):
+    return abs(end - start) + 1
+
+# Exclusive count
+def count_exclusive(start, end):
+    return max(0, abs(end - start) - 1)

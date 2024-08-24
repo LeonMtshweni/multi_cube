@@ -7,6 +7,7 @@ from pathlib import Path
 
 from scripts.modules.setup_utils import setup_project_structure
 from scripts.modules.setup_utils import setup_msdir_structure
+from scripts.modules.setup_utils import count_inclusive
 from scripts.modules.wsclean_utils import generate_wsclean_cmd
 from scripts.modules.bash_utils import write_slurm
 from scripts.modules.cleanup_utils import clean_up_batch_directory
@@ -126,6 +127,9 @@ for item, element in enumerate(range(num_wsclean_runs)):
     # Distribute the remainder channels
     if item < remainder_channels:
         end_channel += 1
+
+    # compute the number of channels to output in each wsclean run
+    numchans = count_inclusive(start_channel, end_channel)
         
     # Generate WSClean command
     wsclean_cmd = generate_wsclean_cmd(
@@ -135,7 +139,7 @@ for item, element in enumerate(range(num_wsclean_runs)):
         pixscale = pixscale,
         start_chan = start_channel,
         end_chan = end_channel,
-        chans_out = num_wsclean_runs,
+        chans_out = numchans,
         ms_file = str(Path(Path(msdir, f"batch_{item}_chans{start_channel}-{end_channel}"), f"batch_{item}_chans{start_channel}-{end_channel}.ms")),
         log_file = os.path.join(log_files, f"batch_{item}_chans{start_channel}-{end_channel}.log"),
         memory = config['wsclean']['memory'],
