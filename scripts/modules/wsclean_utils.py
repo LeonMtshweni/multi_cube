@@ -22,8 +22,4 @@ def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, star
         f"-mgain {mgain} "
         f"-local-rms {ms_file} "
         f"> {log_file} "
-        f"&& "
-        f"for pattern in ('*-psf.fits' '*-model.fits' '*-residual.fits' '*-dirty.fits' '-MFS-*.fits'); do "
-        f"  rm -f {str(chanbasename)}pattern "
-        f"done"
     )

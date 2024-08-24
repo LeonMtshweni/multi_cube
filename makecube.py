@@ -126,6 +126,9 @@ def main():
 
     start_channel = 1
 
+    # create list to hold job ids
+    job_ids = list()
+
     # get flag summart from CASA flagdata
     for item, element in enumerate(range(num_wsclean_runs)):
 
@@ -176,9 +179,18 @@ def main():
         
         # Submit each independent job
         independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} {itemised_bash_file} | awk '{{print $4}}'").read().strip()
+        # save job ids for future job dependency
+        job_ids.append(independent_job_id)
 
         # Set the start channel for the next run
         start_channel = end_channel
+
+    #-------------------------------------------------------------------------------
+    # remove without spawning a SLURM job (probs a bad idea, but fuck it)
+
+    for ext in extensions_to_delete_r1:
+        
+        os.system('rm %s'%(os.path.join(batch_dir_name,chanbasename) + ext)) # delete the unwanted MFS map
 
     #-------------------------------------------------------------------------------
 
