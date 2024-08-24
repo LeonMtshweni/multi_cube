@@ -117,7 +117,7 @@ def main():
     #-------------------------------------------------------------------------------
 
     # Create the batch file directories in the msdir directory
-    setup_output_structure(num_wsclean_runs, numchans, msdir)
+    setup_output_structure(num_wsclean_runs, numchans, outputs)
 
     # Calculate the number of channels per run
     channels_per_run = numchans // num_wsclean_runs
