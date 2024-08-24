@@ -83,6 +83,7 @@ def main():
     mem = config['compute']['mem']
     email_address = config['compute']['email_address']
     #-------------------------------------------------------------------------------
+    # STEP 1 : SPLIT MS FILE
 
     # Ensure the WSClean output directory exists
     os.makedirs(wsclean_output_dir, exist_ok=True)
@@ -116,6 +117,7 @@ def main():
     job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 
     #-------------------------------------------------------------------------------
+    # STEP 2 : MAKE IMAGES
 
     # Create the batch file directories in the msdir directory
     setup_output_structure(num_wsclean_runs, numchans, outputs)
@@ -145,7 +147,7 @@ def main():
         # Generate WSClean command
         wsclean_cmd = generate_wsclean_cmd(
             wsclean_container = Path(container_base_path, wsclean_container),
-            chanbasename = Path(Path(outputs, f"wsclean_{item}_chans{start_channel}-{end_channel}"), chanbasename),
+            chanbasename = Path(Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}"), chanbasename),
             numpix = numpix,
             pixscale = pixscale,
             start_chan = start_channel,
@@ -186,6 +188,7 @@ def main():
         start_channel = end_channel
 
     #-------------------------------------------------------------------------------
+    # STEP 3 : STACK IMAGES
 
     # Calculate the number of channels per run
     channels_per_run = numchans // num_wsclean_runs
@@ -194,7 +197,7 @@ def main():
     start_channel = 1
 
     # get flag summart from CASA flagdata
-    for item, element in enumerate(range(num_wsclean_runs)):
+    for item, (element, job_id) in enumerate(zip(range(num_wsclean_runs), job_ids)):
 
         # create the bash executable
         loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
@@ -230,17 +233,15 @@ def main():
 
         # numbered bash file from current jobs
         itemised_bash_file_ii = str(Path(job_files, f"fitstool_{item}.sh"))
-        
-        # numbered bash file from previous jobs
-        itemised_bash_file = str(Path(job_files, f"wsclean_{item}.sh"))
 
         # spawn jobs - fitstool
-        dependent_job_id_ii = os.popen(f"sbatch --dependency=afterok:{itemised_bash_file} {itemised_bash_file_ii}").read().strip()
+        dependent_job_id_ii = os.popen(f"sbatch --dependency=afterok:{job_id} {itemised_bash_file_ii}").read().strip()
 
         # Set the start channel for the next run
         start_channel = end_channel
 
     #-------------------------------------------------------------------------------
+    # STEP 3 : STACK IMAGES
 
     # # Calculate the number of channels per run
     # channels_per_run = numchans // num_wsclean_runs
