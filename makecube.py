@@ -230,7 +230,7 @@ def main():
         rm_cmd = str()
         for item in matching_files:
             print(item)
-            rm_cmd += generate_rm_commands_ii(item)
+            rm_cmd += f"rm {item} -rf \n "
 
         # Generate the commands
         # rm_cmd = generate_rm_commands(matching_files)
