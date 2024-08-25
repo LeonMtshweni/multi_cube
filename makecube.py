@@ -203,7 +203,7 @@ def main():
     rm_job_ids = list()
 
     # get flag summart from CASA flagdata
-    for item, wsclean_job_id in enumerate(wsclean_job_ids):
+    for item, rm_job_id in zip(range(num_wsclean_runs), rm_job_ids):
 
         # create the bash executable
         loging_file = os.path.join(log_files, f"rm_{item}_chans{start_channel}-{end_channel}.log")
@@ -259,7 +259,7 @@ def main():
     fitstool_job_ids = list()
 
     # get flag summart from CASA flagdata
-    for item, rm_job_id in enumerate(rm_job_ids):
+    for item, rm_job_id in zip(range(num_wsclean_runs), rm_job_ids):
 
         # create the bash executable
         loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
@@ -277,20 +277,8 @@ def main():
         # Name of the output cube
         batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
 
-        # Main pattern to include
-        include_pattern = '*-image.fits'
-
-        # Exclusion pattern
-        exclude_pattern = '*MFS*'
-
-        # Get all files that match the include pattern
-        files_with_pattern = glob.glob(f"{Path(batch_dir_name, include_pattern)}")
-
-        # Filter out files that match the exclusion pattern
-        filtered_files = [f for f in files_with_pattern if not glob.fnmatch.fnmatch(f, exclude_pattern)]
-
         # generate command for fitstool.py
-        stack_cmd = stack_these_fits(kern_container, batch_cubename, batch_dir_name, chanbasename)
+        stack_cmd = stack_these_fits(kern_container, batch_cubename, chanbasename)
 
         # write the slurm file
         write_slurm(bash_filename = os.path.join(job_files, f"fitstool_{item}.sh"),
