@@ -11,6 +11,8 @@ from scripts.modules.setup_utils import setup_output_structure
 from scripts.modules.setup_utils import count_inclusive
 from scripts.modules.wsclean_utils import generate_wsclean_cmd
 from scripts.modules.bash_utils import write_slurm
+from scripts.modules.bash_utils import write_slurm_striped_down
+from scripts.modules.remove_unwanted import generate_rm_commands
 from scripts.modules.stack_fits import stack_these_fits
 from scripts.modules.cleanup_utils import clean_up_batch_directory
 # from scripts.modules.casa_utils import generate_mstransform_cmd
@@ -114,7 +116,7 @@ def main():
     # f.write(mstransform_cmd + '\n')
 
     # Submit the first job and capture its job ID
-    job_id_1 = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
+    split_ms_job_id = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 
     #-------------------------------------------------------------------------------
     # STEP 2 : MAKE IMAGES
@@ -129,7 +131,7 @@ def main():
     start_channel = 1
 
     # create list to hold job ids
-    job_ids = list()
+    wsclean_job_ids = list()
 
     # get flag summart from CASA flagdata
     for item, element in enumerate(range(num_wsclean_runs)):
@@ -180,15 +182,16 @@ def main():
         itemised_bash_file = str(Path(job_files, f"wsclean_{item}.sh"))
         
         # Submit each independent job
-        independent_job_id = os.popen(f"sbatch --dependency=afterok:{job_id_1} {itemised_bash_file} | awk '{{print $4}}'").read().strip()
+        wsclean_job_id = os.popen(f"sbatch --dependency=afterok:{split_ms_job_id} {itemised_bash_file} | awk '{{print $4}}'").read().strip()
+        
         # save job ids for future job dependency
-        job_ids.append(independent_job_id)
+        wsclean_job_ids.append(wsclean_job_id)
 
         # Set the start channel for the next run
         start_channel = end_channel
 
     #-------------------------------------------------------------------------------
-    # STEP 3 : STACK IMAGES
+    # STEP 3 : DELETE UNWANTED FILES
 
     # Calculate the number of channels per run
     channels_per_run = numchans // num_wsclean_runs
@@ -196,8 +199,67 @@ def main():
 
     start_channel = 1
 
+    # create list to hold job ids
+    rm_job_ids = list()
+
     # get flag summart from CASA flagdata
-    for item, (element, job_id) in enumerate(zip(range(num_wsclean_runs), job_ids)):
+    for item, wsclean_job_id in enumerate(wsclean_job_ids):
+
+        # create the bash executable
+        loging_file = os.path.join(log_files, f"rm_{item}_chans{start_channel}-{end_channel}.log")
+
+        # Calculate the end channel for this run
+        end_channel = start_channel + channels_per_run
+
+        # Distribute the remainder channels
+        if item < remainder_channels:
+            end_channel += 1
+
+        # name of the directory containing the base fits images
+        batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
+
+        # List of patterns to glob
+        patterns = ['*-psf.fits', '*-model.fits', '*-residual.fits', '*-dirty.fits', '*-MFS-*.fits']
+
+        # Glob all patterns in one line - this is the full paths to the files to delete
+        matching_files = [file for pattern in patterns for file in glob.glob(os.path.join(batch_dir_name, pattern))]
+
+        # Generate the commands
+        rm_cmd = generate_rm_commands(matching_files)
+            
+        # write the slurm file
+        write_slurm_striped_down(bash_filename = os.path.join(job_files, f"rm_{item}.sh"),
+                        jobname = f"rm_{item}",
+                        logfile = loging_file,
+                        email_address = email_address,
+                        cmd = rm_cmd)
+
+        # numbered bash file from current jobs
+        rm_bash_file = str(Path(job_files, f"rm_{item}.sh"))
+
+        # spawn jobs - fitstool
+        rm_job_id = os.popen(f"sbatch --dependency=afterok:{wsclean_job_id} {rm_bash_file}").read().strip()    
+
+        # save job ids for future job dependency
+        rm_job_ids.append(rm_job_id)
+
+        # Set the start channel for the next run
+        start_channel = end_channel
+
+    #-------------------------------------------------------------------------------
+    # STEP 4 : STACK IMAGES
+
+    # Calculate the number of channels per run
+    channels_per_run = numchans // num_wsclean_runs
+    remainder_channels = numchans % num_wsclean_runs
+
+    start_channel = 1
+
+    # create list to hold job ids
+    fitstool_job_ids = list()
+
+    # get flag summart from CASA flagdata
+    for item, rm_job_id in enumerate(rm_job_ids):
 
         # create the bash executable
         loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
@@ -214,6 +276,18 @@ def main():
 
         # Name of the output cube
         batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
+
+        # Main pattern to include
+        include_pattern = '*-image.fits'
+
+        # Exclusion pattern
+        exclude_pattern = '*MFS*'
+
+        # Get all files that match the include pattern
+        files_with_pattern = glob.glob(f"{Path(batch_dir_name, include_pattern)}")
+
+        # Filter out files that match the exclusion pattern
+        filtered_files = [f for f in files_with_pattern if not glob.fnmatch.fnmatch(f, exclude_pattern)]
 
         # generate command for fitstool.py
         stack_cmd = stack_these_fits(kern_container, batch_cubename, batch_dir_name, chanbasename)
@@ -232,16 +306,19 @@ def main():
                         mem = mem)
 
         # numbered bash file from current jobs
-        itemised_bash_file_ii = str(Path(job_files, f"fitstool_{item}.sh"))
+        fitstool_bash_file = str(Path(job_files, f"fitstool_{item}.sh"))
 
         # spawn jobs - fitstool
-        dependent_job_id_ii = os.popen(f"sbatch --dependency=afterok:{job_id} {itemised_bash_file_ii}").read().strip()
+        fitstool_job_id = os.popen(f"sbatch --dependency=afterok:{rm_job_id} {fitstool_bash_file}").read().strip()
+
+        # save job ids for future job dependency
+        fitstool_job_ids.append(fitstool_job_id)
 
         # Set the start channel for the next run
         start_channel = end_channel
 
     #-------------------------------------------------------------------------------
-    # STEP 3 : STACK IMAGES
+    # STEP 4 : SUBTRACT
 
     # # Calculate the number of channels per run
     # channels_per_run = numchans // num_wsclean_runs
