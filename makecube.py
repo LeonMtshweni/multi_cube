@@ -203,7 +203,7 @@ def main():
     rm_job_ids = list()
 
     # get flag summart from CASA flagdata
-    for item, rm_job_id in zip(range(num_wsclean_runs), wsclean_job_ids):
+    for item, wsclean_job_id in zip(range(num_wsclean_runs), wsclean_job_ids):
 
         # create the bash executable
         loging_file = os.path.join(log_files, f"rm_{item}_chans{start_channel}-{end_channel}.log")
