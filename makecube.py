@@ -13,6 +13,7 @@ from scripts.modules.wsclean_utils import generate_wsclean_cmd
 from scripts.modules.bash_utils import write_slurm
 from scripts.modules.bash_utils import write_slurm_striped_down
 from scripts.modules.remove_unwanted import generate_rm_commands
+from scripts.modules.remove_unwanted import generate_rm_commands_ii
 from scripts.modules.stack_fits import stack_these_fits
 from scripts.modules.cleanup_utils import clean_up_batch_directory
 # from scripts.modules.casa_utils import generate_mstransform_cmd
@@ -64,6 +65,7 @@ def main():
     pixscale = config['wsclean']['pixscale']
     chanbasename = config['wsclean']['chanbasename']
     cubebasename = config['wsclean']['cubebasename']
+    datacolumn = config['wsclean']['datacolumn']
     #-------------------------------------------------------------------------------
 
     #-------------------------------------------------------------------------------
@@ -163,7 +165,8 @@ def main():
             auto_threshold = config['wsclean']['auto_threshold'],
             auto_mask = config['wsclean']['auto_mask'],
             gain = config['wsclean']['gain'],
-            mgain = config['wsclean']['mgain'])
+            mgain = config['wsclean']['mgain'],
+            datacolumn = datacolumn)
 
         # write the slurm file
         write_slurm(bash_filename = os.path.join(job_files, f"wsclean_{item}.sh"),
@@ -224,15 +227,26 @@ def main():
         # Glob all patterns in one line - this is the full paths to the files to delete
         matching_files = [file for pattern in patterns for file in glob.glob(os.path.join(batch_dir_name, pattern))]
 
+        rm_cmd = str()
+        for item in matching_files:
+            print(item)
+            rm_cmd += generate_rm_commands_ii(item)
+
         # Generate the commands
-        rm_cmd = generate_rm_commands(matching_files)
+        # rm_cmd = generate_rm_commands(matching_files)
             
         # write the slurm file
         write_slurm_striped_down(bash_filename = os.path.join(job_files, f"rm_{item}.sh"),
                         jobname = f"rm_{item}",
                         logfile = loging_file,
                         email_address = email_address,
-                        cmd = rm_cmd)
+                        cmd = rm_cmd,
+                        time = '00:30:00',  
+                        partition = "Main",
+                        ntasks = '1',
+                        nodes = '1',
+                        cpus = '1',
+                        mem = '4GB')
 
         # numbered bash file from current jobs
         rm_bash_file = str(Path(job_files, f"rm_{item}.sh"))

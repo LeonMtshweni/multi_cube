@@ -8,3 +8,12 @@ def generate_rm_commands(items, index=0, current_string=""):
     
     # Recursive case: process the next item
     return generate_rm_commands(items, index + 1, current_string)
+
+
+def generate_rm_commands_ii(item):
+    current_string = ""
+    
+    # Iterate over the list and build the string with rm commands
+    current_string += f"rm {item} -rf \n "
+    
+    return current_string

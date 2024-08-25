@@ -38,6 +38,7 @@ wsclean:
   chanbasename: "channel_map"
   cubebasename: "cube_MK-SPT-P045-1k.ms.contsub.fits"
   local_rms: "MK-SPT-P045-1k.ms.contsub"
+  datacolumn: 'DATA'
   memory: "95"
   weight: "briggs -0.5"
   niter: 1

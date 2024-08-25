@@ -39,12 +39,12 @@ def write_slurm_striped_down(bash_filename,
                 logfile,
                 cmd,
                 email_address,
-                time = '00:30:00',  
-                partition = "Main",
-                ntasks = '1',
-                nodes = '1',
-                cpus = '1',
-                mem = '4GB'):
+                time,  
+                partition,
+                ntasks,
+                nodes,
+                cpus,
+                mem):
 
     f = open(bash_filename,'w')
 
