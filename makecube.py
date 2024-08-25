@@ -236,17 +236,28 @@ def main():
         # rm_cmd = generate_rm_commands(matching_files)
             
         # write the slurm file
-        write_slurm_striped_down(bash_filename = os.path.join(job_files, f"rm_{item}.sh"),
+        write_slurm(bash_filename = os.path.join(job_files, f"rm_{item}.sh"),
                         jobname = f"rm_{item}",
                         logfile = loging_file,
                         email_address = email_address,
                         cmd = rm_cmd,
-                        time = '00:30:00',  
-                        partition = "Main",
-                        ntasks = '1',
-                        nodes = '1',
-                        cpus = '1',
-                        mem = '4GB')
+                        time = wall_time,
+                        partition = partition,
+                        ntasks = ntasks,
+                        nodes = nodes,
+                        cpus = cpus,
+                        mem = mem)
+        # write_slurm_striped_down(bash_filename = os.path.join(job_files, f"rm_{item}.sh"),
+        #                 jobname = f"rm_{item}",
+        #                 logfile = loging_file,
+        #                 email_address = email_address,
+        #                 cmd = rm_cmd,
+        #                 time = '00:30:00',  
+        #                 partition = "Main",
+        #                 ntasks = '1',
+        #                 nodes = '1',
+        #                 cpus = '1',
+        #                 mem = '4GB')
 
         # numbered bash file from current jobs
         rm_bash_file = str(Path(job_files, f"rm_{item}.sh"))
