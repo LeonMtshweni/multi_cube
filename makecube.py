@@ -266,7 +266,7 @@ def main():
     fitstool_job_ids = list()
 
     # get flag summart from CASA flagdata
-    for item, rm_job_id in zip(range(num_wsclean_runs), rm_job_ids):
+    for item, wsclean_job_id in zip(range(num_wsclean_runs), wsclean_job_ids):
 
         # create the bash executable
         loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
@@ -304,7 +304,7 @@ def main():
         fitstool_bash_file = str(Path(job_files, f"fitstool_{item}.sh"))
 
         # spawn jobs - fitstool
-        fitstool_job_id = os.popen(f"sbatch --dependency=afterok:{rm_job_id} {fitstool_bash_file}").read().strip()
+        fitstool_job_id = os.popen(f"sbatch --dependency=afterok:{wsclean_job_id} {fitstool_bash_file}").read().strip()
 
         # save job ids for future job dependency
         fitstool_job_ids.append(fitstool_job_id)
@@ -313,50 +313,62 @@ def main():
         start_channel = end_channel
 
     #-------------------------------------------------------------------------------
-    # STEP 4 : SUBTRACT
+    # STEP 5 : SUBTRACT
 
-    # # Calculate the number of channels per run
-    # channels_per_run = numchans // num_wsclean_runs
-    # remainder_channels = numchans % num_wsclean_runs
+    # Calculate the number of channels per run
+    channels_per_run = numchans // num_wsclean_runs
+    remainder_channels = numchans % num_wsclean_runs
 
-    # start_channel = 1
+    first_channel = 1
+
+    # create list to hold job ids
+    imcontsub_job_ids = list()
 
     # # get flag summart from CASA flagdata
-    # for item in range(num_wsclean_runs):
+    for item, fitstool_job_id in zip(range(num_wsclean_runs), fitstool_job_ids):
 
-    #     # Calculate the end channel for this run
-    #     end_channel = start_channel + channels_per_run
+        # create the bash executable
+        loging_file = os.path.join(log_files, f"imcontsub_{item}_chans{first_channel}-{last_channel}.log")
 
-    #     # Distribute the remainder channels
-    #     if item < remainder_channels:
-    #         end_channel += 1
+        # Calculate the end channel for this run
+        last_channel = first_channel + channels_per_run
 
-    #     imcontsub_cmd = 'singularity exec ~/containers/casa-1.7.0.simg casa -c casa_imcontsub.py --logfile logfile-imcontsub.log --nogui mycube=%s imfitorder=%i'%(batch_cubename,imfitorder)
+        # Distribute the remainder channels
+        if item < remainder_channels:
+            last_channel += 1
 
-    #     # write the slurm file
-    #     write_slurm(bash_filename = os.path.join(job_files, f"imcontsub_{item}.sh"),
-    #                     jobname = f"imcontsub_{item}",
-    #                     logfile = loging_file,
-    #                     email_address = email_address,
-    #                     cmd = imcontsub_cmd,
-    #                     time = wall_time,
-    #                     partition = partition,
-    #                     ntasks = ntasks,
-    #                     nodes = nodes,
-    #                     cpus = cpus,
-    #                     mem = mem)
+        # name of the directory containing the base fits images
+        batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
 
-    #     # numbered bash file from current jobs
-    #     itemised_bash_file_iii = str(Path(job_files, f"imcontsub_{item}.sh"))
-        
-    #     # numbered bash file from previous jobs
-    #     itemised_bash_file_ii = str(Path(job_files, f"fitstool_{item}.sh"))
+        # Name of the output cube
+        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits")
 
-    #     # spawn jobs - imcontsub casa
-    #     dependent_job_id_iii = os.popen(f"sbatch --dependency=afterok:{itemised_bash_file_ii} {itemised_bash_file_iii}").read().strip()
+        imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
 
-    #     # Set the start channel for the next run
-    #     start_channel = end_channel
+        # write the slurm file
+        write_slurm(bash_filename = os.path.join(job_files, f"imcontsub_{item}.sh"),
+                        jobname = f"imcontsub_{item}",
+                        logfile = loging_file,
+                        email_address = email_address,
+                        cmd = imcontsub_cmd,
+                        time = wall_time,
+                        partition = partition,
+                        ntasks = ntasks,
+                        nodes = nodes,
+                        cpus = cpus,
+                        mem = mem)
+
+        # numbered bash file from current jobs
+        imcontsub_bash_file = str(Path(job_files, f"imcontsub_{item}.sh"))
+
+        # spawn jobs - imcontsub casa
+        imcontsub_job_id = os.popen(f"sbatch --dependency=afterok:{fitstool_job_id} {imcontsub_bash_file}").read().strip()
+
+        # save job ids for future job dependency
+        imcontsub_job_ids.append(imcontsub_job_id)
+
+        # Set the start channel for the next run
+        first_channel = last_channel
 
 if __name__ == '__main__':
     main()
