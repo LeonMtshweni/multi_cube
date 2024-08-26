@@ -316,11 +316,7 @@ def main():
     #-------------------------------------------------------------------------------
     # STEP 5 : SUBTRACT
 
-    # Calculate the number of channels per run
-    channels_per_run = numchans // num_wsclean_runs
-    remainder_channels = numchans % num_wsclean_runs
-
-    first_channel = 1
+    start_channel = 1
 
     # create list to hold job ids
     imcontsub_job_ids = list()
@@ -329,20 +325,22 @@ def main():
     for item, fitstool_job_id in zip(range(num_wsclean_runs), fitstool_job_ids):
 
         # Calculate the end channel for this run
-        last_channel = first_channel + channels_per_run
+        end_channel = start_channel + channels_per_run
 
         # create the bash executable
-        loging_file = os.path.join(log_files, f"imcontsub_{item}_chans{first_channel}-{last_channel}.log")
+        loging_file = os.path.join(log_files, f"imcontsub_{item}_chans{start_channel}-{end_channel}.log")
 
         # Distribute the remainder channels
         if item < remainder_channels:
-            last_channel += 1
+            end_channel += 1
 
         # name of the directory containing the base fits images
-        batch_dir_name = Path(outputs, f"batch_{item}_chans{first_channel}-{last_channel}")
+        batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
+        print(f" imcontsub batch_dir_name {batch_dir_name}")
 
         # Name of the output cube
-        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{first_channel}-{last_channel}.fits")
+        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
+        print(f" imcontsub batch_cubename {batch_cubename}")
 
         imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
 
@@ -369,7 +367,7 @@ def main():
         imcontsub_job_ids.append(imcontsub_job_id)
 
         # Set the start channel for the next run
-        first_channel = last_channel
+        start_channel = end_channel
 
 if __name__ == '__main__':
     main()
