@@ -258,7 +258,7 @@ def main():
     # STEP 4 : STACK IMAGES
 
     start_channel = 1
-    print(f" initiating start_channel: {start_channel}")
+    print(f" resetting the start channel to : {start_channel}")
 
     # create list to hold job ids
     fitstool_job_ids = list()
@@ -268,7 +268,7 @@ def main():
 
         # Calculate the end channel for this run
         end_channel = start_channel + channels_per_run
-        print(f" initiating end_channel: {end_channel}")
+        print(f"resetting the end channel to : {end_channel}")
         
         # create the bash executable
         loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
@@ -339,10 +339,10 @@ def main():
             last_channel += 1
 
         # name of the directory containing the base fits images
-        batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
+        batch_dir_name = Path(outputs, f"batch_{item}_chans{first_channel}-{last_channel}")
 
         # Name of the output cube
-        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits")
+        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{first_channel}-{last_channel}.fits")
 
         imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
 
