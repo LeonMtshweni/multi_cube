@@ -13,7 +13,6 @@ from scripts.modules.wsclean_utils import generate_wsclean_cmd
 from scripts.modules.bash_utils import write_slurm
 from scripts.modules.bash_utils import write_slurm_striped_down
 from scripts.modules.remove_unwanted import generate_rm_commands
-from scripts.modules.remove_unwanted import generate_rm_commands_ii
 from scripts.modules.stack_fits import stack_these_fits
 from scripts.modules.cleanup_utils import clean_up_batch_directory
 # from scripts.modules.casa_utils import generate_mstransform_cmd
