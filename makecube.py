@@ -280,12 +280,14 @@ def main():
 
         # name of the directory containing the base fits images
         batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
+        print(f" fits tool batch_dir_name {batch_dir_name}")
 
         # Name of the output cube
         batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
-
+        print(f" fits tool batch_cubename {batch_cubename}")
+        
         # generate command for fitstool.py
-        stack_cmd = stack_these_fits(kern_container, batch_cubename, chanbasename)
+        stack_cmd = stack_these_fits(kern_container, batch_cubename, batch_dir_name, chanbasename)
 
         # write the slurm file
         write_slurm(bash_filename = os.path.join(job_files, f"fitstool_{item}.sh"),
