@@ -188,6 +188,7 @@ def main():
         
         # Submit each independent job
         wsclean_job_id = os.popen(f"sbatch --dependency=afterok:{split_ms_job_id} {itemised_bash_file} | awk '{{print $4}}'").read().strip()
+        print(f"This is the wsclean_job_id job id {wsclean_job_id}")
         
         # save job ids for future job dependency
         wsclean_job_ids.append(wsclean_job_id)
@@ -306,6 +307,7 @@ def main():
 
         # spawn jobs - fitstool
         fitstool_job_id = os.popen(f"sbatch --dependency=afterok:{wsclean_job_id} {fitstool_bash_file}").read().strip()
+        print(f"This is the fitstool_job_id job id {fitstool_job_id}")
 
         # save job ids for future job dependency
         fitstool_job_ids.append(fitstool_job_id)
@@ -362,7 +364,7 @@ def main():
 
         # spawn jobs - imcontsub casa
         imcontsub_job_id = os.popen(f"sbatch --dependency=afterok:{fitstool_job_id} {imcontsub_bash_file}").read().strip()
-
+        print(f"This is the imcontsub_job_id job id {imcontsub_job_id}")
         # save job ids for future job dependency
         imcontsub_job_ids.append(imcontsub_job_id)
 
