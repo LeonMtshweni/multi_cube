@@ -121,6 +121,7 @@ def main():
 
     #-------------------------------------------------------------------------------
     # STEP 0 : DEFINE THE SIZE OF EACH MS FILE, IN NUMBER OF CHANNELS PER BATCH FILE
+
     channels_per_run = numchans // num_wsclean_runs
     remainder_channels = numchans % num_wsclean_runs
 
@@ -256,11 +257,8 @@ def main():
     #-------------------------------------------------------------------------------
     # STEP 4 : STACK IMAGES
 
-    # Calculate the number of channels per run
-    channels_per_run = numchans // num_wsclean_runs
-    remainder_channels = numchans % num_wsclean_runs
-
     start_channel = 1
+    print(f" initiating start_channel: {start_channel}")
 
     # create list to hold job ids
     fitstool_job_ids = list()
@@ -270,6 +268,7 @@ def main():
 
         # Calculate the end channel for this run
         end_channel = start_channel + channels_per_run
+        print(f" initiating end_channel: {end_channel}")
         
         # create the bash executable
         loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
