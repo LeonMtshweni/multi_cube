@@ -206,11 +206,11 @@ def main():
     # # get flag summart from CASA flagdata
     # for item, wsclean_job_id in zip(range(num_wsclean_runs), wsclean_job_ids):
 
-    #     # create the bash executable
-    #     loging_file = os.path.join(log_files, f"rm_{item}_chans{initial_channel}-{final_channel}.log")
-
     #     # Calculate the end channel for this run
     #     final_channel = initial_channel + channels_per_run
+
+    #     # create the bash executable
+    #     loging_file = os.path.join(log_files, f"rm_{item}_chans{initial_channel}-{final_channel}.log")
 
     #     # Distribute the remainder channels
     #     if item < remainder_channels:
@@ -268,11 +268,11 @@ def main():
     # get flag summart from CASA flagdata
     for item, wsclean_job_id in zip(range(num_wsclean_runs), wsclean_job_ids):
 
-        # create the bash executable
-        loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
-
         # Calculate the end channel for this run
         end_channel = start_channel + channels_per_run
+        
+        # create the bash executable
+        loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
 
         # Distribute the remainder channels
         if item < remainder_channels:
@@ -285,7 +285,7 @@ def main():
         # Name of the output cube
         batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
         print(f" fits tool batch_cubename {batch_cubename}")
-        
+
         # generate command for fitstool.py
         stack_cmd = stack_these_fits(kern_container, batch_cubename, batch_dir_name, chanbasename)
 
@@ -329,11 +329,11 @@ def main():
     # # get flag summart from CASA flagdata
     for item, fitstool_job_id in zip(range(num_wsclean_runs), fitstool_job_ids):
 
-        # create the bash executable
-        loging_file = os.path.join(log_files, f"imcontsub_{item}_chans{first_channel}-{last_channel}.log")
-
         # Calculate the end channel for this run
         last_channel = first_channel + channels_per_run
+
+        # create the bash executable
+        loging_file = os.path.join(log_files, f"imcontsub_{item}_chans{first_channel}-{last_channel}.log")
 
         # Distribute the remainder channels
         if item < remainder_channels:
