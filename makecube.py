@@ -117,7 +117,12 @@ def main():
     # f.write(mstransform_cmd + '\n')
 
     # Submit the first job and capture its job ID
-    split_ms_job_id = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
+    split_ms_job_id = os.popen(f"sbatch {bash_script}").read().strip()
+
+    # Extract the id from the submit message
+    split_ms_job_id = split_ms_job_id.split()[-1]
+
+    print(f"\033[1;32m>>> Submitted the wsclean job with id: {split_ms_job_id} and name: split_ms\033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 0 : DEFINE THE SIZE OF EACH MS FILE, IN NUMBER OF CHANNELS PER BATCH FILE
@@ -192,7 +197,7 @@ def main():
         # Extract the job id from the submit text
         wsclean_job_id = wsclean_job_id.split()[-1]
 
-        print(f"Submitted the wsclean job with id: {wsclean_job_id} and name: wsclean_{item}")
+        print(f"\033[1;32m>>> Submitted the wsclean job with id: {wsclean_job_id} and name: wsclean_{item}\033[0m")
 
         # save job ids for future job dependency
         wsclean_job_ids.append(wsclean_job_id)
@@ -263,7 +268,6 @@ def main():
     # STEP 4 : STACK IMAGES
 
     start_channel = 1
-    print(f" resetting the start channel to : {start_channel}")
 
     # create list to hold job ids
     fitstool_job_ids = list()
@@ -273,7 +277,6 @@ def main():
 
         # Calculate the end channel for this run
         end_channel = start_channel + channels_per_run
-        print(f"resetting the end channel to : {end_channel}")
         
         # create the bash executable
         loging_file = os.path.join(log_files, f"fitstoool_{item}_chans{start_channel}-{end_channel}.log")
@@ -284,11 +287,9 @@ def main():
 
         # name of the directory containing the base fits images
         batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
-        print(f" fits tool batch_dir_name {batch_dir_name}")
 
         # Name of the output cube
-        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
-        print(f" fits tool batch_cubename {batch_cubename}")
+        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits")
 
         # generate command for fitstool.py
         stack_cmd = stack_these_fits(kern_container, batch_cubename, batch_dir_name, chanbasename)
@@ -315,7 +316,7 @@ def main():
         # Extract the job ID from the output
         fitstool_job_id = fitstool_job_id.split()[-1]
 
-        print(f"Submitted the fitstool job with id: {fitstool_job_id} and name: fitstool_{item}")
+        print(f"\033[1;32m>>> Submitted the fitstool job with id: {fitstool_job_id} and name: fitstool_{item}033[0m")
 
         # save job ids for future job dependency
         fitstool_job_ids.append(fitstool_job_id)
@@ -346,11 +347,9 @@ def main():
 
         # name of the directory containing the base fits images
         batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
-        print(f" imcontsub batch_dir_name {batch_dir_name}")
 
         # Name of the output cube
-        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits") 
-        print(f" imcontsub batch_cubename {batch_cubename}")
+        batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits")
 
         imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
 
@@ -376,7 +375,7 @@ def main():
         # Extract the job ID from the output
         imcontsub_job_id = imcontsub_job_id.split()[-1]
 
-        print(f"Submitted the imcontsub job with id: {imcontsub_job_id} and name: imcontsub_{item}")
+        print(f"\033[1;32m>>> Submitted the imcontsub job with id: {imcontsub_job_id} and name: imcontsub_{item}\033[0m")
 
         # save job ids for future job dependency
         imcontsub_job_ids.append(imcontsub_job_id)
