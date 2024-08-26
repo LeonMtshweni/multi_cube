@@ -121,14 +121,15 @@ def main():
     split_ms_job_id = os.popen(f"sbatch {bash_script} | awk '{{print $4}}'").read().strip()
 
     #-------------------------------------------------------------------------------
+    # STEP 0 : DEFINE THE SIZE OF EACH MS FILE, IN NUMBER OF CHANNELS PER BATCH FILE
+    channels_per_run = numchans // num_wsclean_runs
+    remainder_channels = numchans % num_wsclean_runs
+
+    #-------------------------------------------------------------------------------
     # STEP 2 : MAKE IMAGES
 
     # Create the batch file directories in the msdir directory
     setup_output_structure(num_wsclean_runs, numchans, outputs)
-
-    # Calculate the number of channels per run
-    channels_per_run = numchans // num_wsclean_runs
-    remainder_channels = numchans % num_wsclean_runs
 
     start_channel = 1
 
@@ -136,7 +137,7 @@ def main():
     wsclean_job_ids = list()
 
     # get flag summart from CASA flagdata
-    for item, element in enumerate(range(num_wsclean_runs)):
+    for item in range(num_wsclean_runs):
 
         # Calculate the end channel for this run
         end_channel = start_channel + channels_per_run
@@ -166,7 +167,8 @@ def main():
             auto_mask = config['wsclean']['auto_mask'],
             gain = config['wsclean']['gain'],
             mgain = config['wsclean']['mgain'],
-            datacolumn = datacolumn)
+            datacolumn = datacolumn,
+            rm_dir = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}"))
 
         # write the slurm file
         write_slurm(bash_filename = os.path.join(job_files, f"wsclean_{item}.sh"),
@@ -196,70 +198,61 @@ def main():
     #-------------------------------------------------------------------------------
     # STEP 3 : DELETE UNWANTED FILES
 
-    # Calculate the number of channels per run
-    channels_per_run = numchans // num_wsclean_runs
-    remainder_channels = numchans % num_wsclean_runs
+    # # initialise the starting channel
+    # initial_channel = 1
 
-    start_channel = 1
+    # # create list to hold job ids
+    # rm_job_ids = list()
 
-    # create list to hold job ids
-    rm_job_ids = list()
+    # # get flag summart from CASA flagdata
+    # for item, wsclean_job_id in zip(range(num_wsclean_runs), wsclean_job_ids):
 
-    # get flag summart from CASA flagdata
-    for item, wsclean_job_id in zip(range(num_wsclean_runs), wsclean_job_ids):
+    #     # create the bash executable
+    #     loging_file = os.path.join(log_files, f"rm_{item}_chans{initial_channel}-{final_channel}.log")
 
-        # create the bash executable
-        loging_file = os.path.join(log_files, f"rm_{item}_chans{start_channel}-{end_channel}.log")
+    #     # Calculate the end channel for this run
+    #     final_channel = initial_channel + channels_per_run
 
-        # Calculate the end channel for this run
-        end_channel = start_channel + channels_per_run
+    #     # Distribute the remainder channels
+    #     if item < remainder_channels:
+    #         final_channel += 1
 
-        # Distribute the remainder channels
-        if item < remainder_channels:
-            end_channel += 1
+    #     # name of the directory containing the base fits images
+    #     batch_dir_name = Path(outputs, f"batch_{item}_chans{initial_channel}-{final_channel}")
 
-        # name of the directory containing the base fits images
-        batch_dir_name = Path(outputs, f"batch_{item}_chans{start_channel}-{end_channel}")
+    #     # List of patterns to glob
+    #     patterns = ['*-psf.fits', '*-model.fits', '*-residual.fits', '*-dirty.fits', '*-MFS-*.fits']
 
-        # List of patterns to glob
-        patterns = ['*-psf.fits', '*-model.fits', '*-residual.fits', '*-dirty.fits', '*-MFS-*.fits']
+    #     # Glob all patterns in one line - this is the full paths to the files to delete
+    #     matching_files = [file for pattern in patterns for file in glob.glob(os.path.join(batch_dir_name, pattern))]
 
-        # Glob all patterns in one line - this is the full paths to the files to delete
-        matching_files = [file for pattern in patterns for file in glob.glob(os.path.join(batch_dir_name, pattern))]
-
-        rm_cmd = str()
-        for item in matching_files:
-            print(item)
-            rm_cmd += f"rm {item} -rf \n "
-        print(rm_cmd)
-
-        # Generate the commands
-        # rm_cmd = generate_rm_commands(matching_files)
+    #     # Generate the commands
+    #     rm_cmd = generate_rm_commands(matching_files)
             
-        # write the slurm file
-        write_slurm_striped_down(bash_filename = os.path.join(job_files, f"rm_{item}.sh"),
-                        jobname = f"rm_{item}",
-                        logfile = loging_file,
-                        email_address = email_address,
-                        cmd = rm_cmd,
-                        time = '00:30:00',  
-                        partition = "Main",
-                        ntasks = '1',
-                        nodes = '1',
-                        cpus = '1',
-                        mem = '4GB')
+    #     # write the slurm file
+    #     write_slurm_striped_down(bash_filename = os.path.join(job_files, f"rm_{item}.sh"),
+    #                     jobname = f"rm_{item}",
+    #                     logfile = loging_file,
+    #                     email_address = email_address,
+    #                     cmd = rm_cmd,
+    #                     time = '00:30:00',
+    #                     partition = "Main",
+    #                     ntasks = '1',
+    #                     nodes = '1',
+    #                     cpus = '1',
+    #                     mem = '4GB')
 
-        # numbered bash file from current jobs
-        rm_bash_file = str(Path(job_files, f"rm_{item}.sh"))
+    #     # numbered bash file from current jobs
+    #     rm_bash_file = str(Path(job_files, f"rm_{item}.sh"))
 
-        # spawn jobs - fitstool
-        rm_job_id = os.popen(f"sbatch --dependency=afterok:{wsclean_job_id} {rm_bash_file}").read().strip()    
+    #     # spawn jobs - fitstool
+    #     rm_job_id = os.popen(f"sbatch --dependency=afterok:{wsclean_job_id} {rm_bash_file}").read().strip()    
 
-        # save job ids for future job dependency
-        rm_job_ids.append(rm_job_id)
+    #     # save job ids for future job dependency
+    #     rm_job_ids.append(rm_job_id)
 
-        # Set the start channel for the next run
-        start_channel = end_channel
+    #     # Set the start channel for the next run
+    #     initial_channel = final_channel
 
     #-------------------------------------------------------------------------------
     # STEP 4 : STACK IMAGES
@@ -330,7 +323,7 @@ def main():
     # start_channel = 1
 
     # # get flag summart from CASA flagdata
-    # for item, element in enumerate(range(num_wsclean_runs)):
+    # for item in range(num_wsclean_runs):
 
     #     # Calculate the end channel for this run
     #     end_channel = start_channel + channels_per_run

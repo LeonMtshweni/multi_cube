@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, start_chan, end_chan, chans_out, ms_file, log_file, memory, weight, niter, auto_threshold, auto_mask, gain, mgain, datacolumn):
+def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, start_chan, end_chan, chans_out, ms_file, log_file, memory, weight, niter, auto_threshold, auto_mask, gain, mgain, datacolumn, rm_dir):
     """Generate the WSClean command."""
     return (
         f"singularity exec {wsclean_container} wsclean "
@@ -22,4 +22,6 @@ def generate_wsclean_cmd(wsclean_container, chanbasename, numpix, pixscale, star
         f"-mgain {mgain} "
         f"-local-rms {ms_file} "
         f"> {log_file} "
+        f"&& "
+        f"rm {rm_dir}*-psf.fits  {rm_dir}*-model.fits {rm_dir}*-residual.fits {rm_dir}*-dirty.fits {rm_dir}*-MFS-*.fits -rf"
     )
