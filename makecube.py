@@ -122,7 +122,7 @@ def main():
     # Extract the id from the submit message
     split_ms_job_id = split_ms_job_id.split()[-1]
 
-    print(f"\033[1;32m>>> Submitted the wsclean job with id: {split_ms_job_id} and name: split_ms\033[0m")
+    print(f"\033[5;35m>>> Submitted the wsclean job with id: {split_ms_job_id} and name: split_ms\033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 0 : DEFINE THE SIZE OF EACH MS FILE, IN NUMBER OF CHANNELS PER BATCH FILE
@@ -197,7 +197,7 @@ def main():
         # Extract the job id from the submit text
         wsclean_job_id = wsclean_job_id.split()[-1]
 
-        print(f"\033[1;32m>>> Submitted the wsclean job with id: {wsclean_job_id} and name: wsclean_{item}\033[0m")
+        print(f"\033[5;35m>>> Submitted the wsclean job with id: {wsclean_job_id} and name: wsclean_{item}\033[0m")
 
         # save job ids for future job dependency
         wsclean_job_ids.append(wsclean_job_id)
@@ -316,7 +316,7 @@ def main():
         # Extract the job ID from the output
         fitstool_job_id = fitstool_job_id.split()[-1]
 
-        print(f"\033[1;32m>>> Submitted the fitstool job with id: {fitstool_job_id} and name: fitstool_{item}033[0m")
+        print(f"\033[5;35m>>> Submitted the fitstool job with id: {fitstool_job_id} and name: fitstool_{item}033[0m")
 
         # save job ids for future job dependency
         fitstool_job_ids.append(fitstool_job_id)
@@ -375,7 +375,7 @@ def main():
         # Extract the job ID from the output
         imcontsub_job_id = imcontsub_job_id.split()[-1]
 
-        print(f"\033[1;32m>>> Submitted the imcontsub job with id: {imcontsub_job_id} and name: imcontsub_{item}\033[0m")
+        print(f"\033[5;35m>>> Submitted the imcontsub job with id: {imcontsub_job_id} and name: imcontsub_{item}\033[0m")
 
         # save job ids for future job dependency
         imcontsub_job_ids.append(imcontsub_job_id)
