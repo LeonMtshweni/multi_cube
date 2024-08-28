@@ -40,7 +40,7 @@ def setup_msdir_structure(num_wsclean_runs, numchans, msdir):
     channels_per_run = numchans // num_wsclean_runs
     remainder_channels = numchans % num_wsclean_runs
 
-    start_channel = 1
+    start_channel = 0
 
     for item, element in enumerate(range(num_wsclean_runs)):
 
@@ -72,7 +72,7 @@ def setup_output_structure(num_wsclean_runs, numchans, output):
     channels_per_run = numchans // num_wsclean_runs
     remainder_channels = numchans % num_wsclean_runs
 
-    start_channel = 1
+    start_channel = 0
 
     for item, element in enumerate(range(num_wsclean_runs)):
 

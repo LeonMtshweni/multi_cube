@@ -10,7 +10,7 @@ msdir = Path(sys.argv[4])
 channels_per_run = numchans // num_wsclean_runs
 remainder_channels = numchans % num_wsclean_runs
 
-start_channel = 1
+start_channel = 0
 
 # get flag summart from CASA flagdata
 for item, element in enumerate(range(num_wsclean_runs)):

@@ -136,7 +136,7 @@ def main():
     # Create the batch file directories in the msdir directory
     setup_output_structure(num_wsclean_runs, numchans, outputs)
 
-    start_channel = 1
+    start_channel = 0
 
     # create list to hold job ids
     wsclean_job_ids = list()
@@ -267,7 +267,7 @@ def main():
     #-------------------------------------------------------------------------------
     # STEP 4 : STACK IMAGES
 
-    start_channel = 1
+    start_channel = 0
 
     # create list to hold job ids
     fitstool_job_ids = list()
@@ -327,7 +327,7 @@ def main():
     #-------------------------------------------------------------------------------
     # STEP 5 : SUBTRACT
 
-    start_channel = 1
+    start_channel = 0
 
     # create list to hold job ids
     imcontsub_job_ids = list()

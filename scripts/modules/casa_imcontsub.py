@@ -8,7 +8,7 @@ for item in sys.argv:
         mycubefits = parts[1]
     elif parts[0] == 'imfitorder':
         imfitorder = int(parts[1])
-print(f" These are the arguments for cas imcontsub.pyargs}")
+print(f" These are the arguments for cas imcontsub.py {args}")
 
 mycubecasa = mycubefits.replace('.fits','.im')
 
