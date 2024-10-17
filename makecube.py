@@ -161,7 +161,7 @@ def main():
             numpix = numpix,
             pixscale = pixscale,
             start_chan = 0,
-            end_chan = start_channel + channels_per_run + 1,
+            end_chan = channels_per_run + 1,
             chans_out = numchans,
             ms_file = str(Path(Path(msdir, f"batch_{item}_chans{start_channel}-{end_channel}"), f"batch_{item}_chans{start_channel}-{end_channel}.ms")),
             log_file = os.path.join(log_files, f"batch_{item}_chans{start_channel}-{end_channel}.log"),
