@@ -105,9 +105,15 @@ def main():
         sys.exit(0)
 
     # Get the config file path from the command-line argument
-    config_path = str(os.path.dirname( args.config))
-    print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_path}')
+    config_path = args.config
 
+    # Convert the config_path to an absolute path
+    absolute_config_path = os.path.abspath(config_path)
+
+    # Extract the file name
+    config_basename = os.path.basename(absolute_config_path)
+    
+    print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_basename}')
 
     # Check if the config file exists
     if not os.path.exists(config_path):
@@ -168,12 +174,12 @@ def main():
     #-------------------------------------------------------------------------------
 
     # Define relative paths
-    msdir = os.path.join(config_path, 'msdir')
-    outputs = os.path.join(config_path, 'outputs')
-    inputs = os.path.join(config_path, 'inputs')
-    modules = os.path.join(config_path, 'scripts/modules')
-    job_files = os.path.join(config_path, 'job_files')
-    log_files = os.path.join(config_path, 'log_files')
+    msdir = os.path.join(config_basename, 'msdir')
+    outputs = os.path.join(config_basename, 'outputs')
+    inputs = os.path.join(config_basename, 'inputs')
+    modules = os.path.join(config_basename, 'scripts/modules')
+    job_files = os.path.join(config_basename, 'job_files')
+    log_files = os.path.join(config_basename, 'log_files')
 
     # STEP 1 : SPLIT MS FILE
 
