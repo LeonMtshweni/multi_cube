@@ -8,6 +8,10 @@ setup(
     name="multi-cube",  # Your package name on PyPI
     version="0.2.1",  # Initial version
     packages=find_packages(),  # Automatically find the packages
+    include_package_data=True,  # Include non-code files specified in MANIFEST.in
+    package_data={
+        'multi_cube': ['config/config.yml'],  # Ensure config.yml is included
+    },
     description="A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum-subtracted ms file.",
     long_description=open("README.md").read(),  # Long description from your README
     long_description_content_type="text/markdown",  # Specify the correct content type for the README
