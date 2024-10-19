@@ -8,6 +8,7 @@ multi_cube.egg-info/dependency_links.txt
 multi_cube.egg-info/entry_points.txt
 multi_cube.egg-info/requires.txt
 multi_cube.egg-info/top_level.txt
+multi_cube/config/config.yaml
 multi_cube/scripts/__init__.py
 multi_cube/scripts/makecube.py
 multi_cube/scripts/modules/__init__.py
