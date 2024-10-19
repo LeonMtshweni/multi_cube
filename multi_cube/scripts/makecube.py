@@ -22,7 +22,7 @@ from scripts.modules.cleanup_utils import clean_up_batch_directory
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Path to the default config file within the package
-DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, 'config/config.yaml')
+DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, '..', 'config', 'config.yaml')
 
 def generate_default_config(config_path):
     """Copy the default config file to the specified location."""
