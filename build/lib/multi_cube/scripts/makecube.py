@@ -54,7 +54,9 @@ def generate_default_config(config_path):
     Copy the default config file to the specified location.
     """
 
-    config_dir = os.path.dirname(config_path)
+    config_dir = str(os.path.dirname(config_path))
+    
+    print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_dir}')
     
     if os.path.exists(config_path):
         print(f"Configuration file {config_path} already exists.")
@@ -105,9 +107,6 @@ def main():
 
     # Get the config file path from the command-line argument
     config_path = args.config
-
-    # Get the current directory name
-    config_dir = os.path.dirname(config_path)
 
     # Check if the config file exists
     if not os.path.exists(config_path):
