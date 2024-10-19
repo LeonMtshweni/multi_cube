@@ -6,7 +6,7 @@ def parse_requirements(filename):
 
 setup(
     name="multi-cube",  # Your package name on PyPI
-    version="0.2.1",  # Initial version
+    version="0.2.2",  # Initial version
     packages=find_packages(),  # Automatically find the packages
     include_package_data=True,  # Include non-code files specified in MANIFEST.in
     package_data={
