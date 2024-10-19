@@ -12,23 +12,23 @@ def create_directories(directories):
         os.makedirs(directory, exist_ok=True)
         print(f"Created directory: {directory}")
 
-def setup_project_structure(config_dir):
+def setup_project_structure():
     """
     Set up the project structure by creating necessary directories in the parent directory.
     """
     # Define directories to create
-    parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+    # site_package_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
     
-    directories = [
-        os.path.join(config_dir, 'msdir'),
-        os.path.join(config_dir, 'outputs'), 
-        os.path.join(config_dir, 'inputs'),
-        os.path.join(config_dir, 'job_files'),
-        os.path.join(config_dir, 'log_files')
-    ]
+    # directories = [
+    #     os.path.join(config_dir, 'msdir'),
+    #     os.path.join(config_dir, 'outputs'), 
+    #     os.path.join(config_dir, 'inputs'),
+    #     os.path.join(config_dir, 'job_files'),
+    #     os.path.join(config_dir, 'log_files')
+    # ]
 
     # Create directories
-    create_directories(directories)
+    # create_directories(directories)
 
 def setup_msdir_structure(num_wsclean_runs, numchans, msdir):
     """

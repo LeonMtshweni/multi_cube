@@ -55,8 +55,6 @@ def generate_default_config(config_path):
     """
 
     config_dir = str(os.path.dirname(config_path))
-
-    print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_dir}')
     
     if os.path.exists(config_path):
         print(f"Configuration file {config_path} already exists.")
@@ -67,8 +65,6 @@ def generate_default_config(config_path):
 
     # Create directories in the config file location
     create_directories_in_config_dir(config_dir)
-
-    return config_dir
 
 def main():
 
@@ -105,11 +101,13 @@ def main():
     # If --get-config is specified, generate the default config file and exit
     # config_dir is also the directory of the config file
     if args.get_config:
-        config_dir = generate_default_config(args.config)
+        generate_default_config(args.config)
         sys.exit(0)
 
     # Get the config file path from the command-line argument
     config_path = args.config
+    print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_path}')
+
 
     # Check if the config file exists
     if not os.path.exists(config_path):
@@ -170,12 +168,12 @@ def main():
     #-------------------------------------------------------------------------------
 
     # Define relative paths
-    msdir = os.path.join(config_dir, 'msdir')
-    outputs = os.path.join(config_dir, 'outputs')
-    inputs = os.path.join(config_dir, 'inputs')
-    modules = os.path.join(config_dir, 'scripts/modules')
-    job_files = os.path.join(config_dir, 'job_files')
-    log_files = os.path.join(config_dir, 'log_files')
+    msdir = os.path.join(config_path, 'msdir')
+    outputs = os.path.join(config_path, 'outputs')
+    inputs = os.path.join(config_path, 'inputs')
+    modules = os.path.join(config_path, 'scripts/modules')
+    job_files = os.path.join(config_path, 'job_files')
+    log_files = os.path.join(config_path, 'log_files')
 
     # STEP 1 : SPLIT MS FILE
 

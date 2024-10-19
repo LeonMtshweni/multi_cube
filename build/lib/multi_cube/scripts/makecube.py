@@ -55,7 +55,7 @@ def generate_default_config(config_path):
     """
 
     config_dir = str(os.path.dirname(config_path))
-    
+
     print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_dir}')
     
     if os.path.exists(config_path):
@@ -67,6 +67,8 @@ def generate_default_config(config_path):
 
     # Create directories in the config file location
     create_directories_in_config_dir(config_dir)
+
+    return config_dir
 
 def main():
 
@@ -101,8 +103,9 @@ def main():
     args = parser.parse_args()
 
     # If --get-config is specified, generate the default config file and exit
+    # config_dir is also the directory of the config file
     if args.get_config:
-        generate_default_config(args.config)
+        config_dir = generate_default_config(args.config)
         sys.exit(0)
 
     # Get the config file path from the command-line argument
@@ -119,7 +122,7 @@ def main():
         config = yaml.safe_load(file)
 
     # Create the output directories
-    # setup_project_structure(config_dir)
+    setup_project_structure()
 
     #-------------------------------------------------------------------------------
     # PATH CONFIG PARAMETERS (from the config file)
