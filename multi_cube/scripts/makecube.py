@@ -31,6 +31,19 @@ modules_dir = str(os.path.join(PACKAGE_DIR, 'modules'))
 # Get the directory path by stripping the filename (config.yml)
 DEFAULT_CONFIG_DIR = os.path.dirname(DEFAULT_CONFIG_PATH)
 
+ascii_art = '''
+|=====================================================================|
+|                    _  _    _                      _                 |
+|  _ __ ___   _   _ | || |_ (_)         ___  _   _ | |__    ___       |
+| | '_ ` _ \ | | | || || __|| | _____  / __|| | | || '_ \  / _ \      |
+| | | | | | || |_| || || |_ | ||_____|| (__ | |_| || |_) ||  __/      |
+| |_| |_| |_| \__,_||_| \__||_|        \___| \__,_||_.__/  \___|      |
+|                                                                     |
+|                                                                     |
+|=====================================================================|
+'''
+print(f"\033[5;35m{ascii_art}\033[0m")  # Display the ASCII art
+
 def create_directories_in_config_dir(config_dir):
     """
     Create 'output', 'msdir', and 'input' directories in the same location as the config file.
@@ -112,8 +125,6 @@ def main():
 
     # Get the current working directory
     current_directory = os.getcwd()
-
-    print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {current_directory}')
 
     # Check if the config file exists
     if not os.path.exists(config_path):
@@ -256,7 +267,7 @@ def main():
             numpix = numpix,
             pixscale = pixscale,
             start_chan = 0,
-            end_chan = channels_per_run + 1,
+            end_chan = channels_per_run,
             chans_out = 3,
             ms_file = str(Path(Path(msdir, f"batch_{item}_chans{start_channel}-{end_channel}"), f"batch_{item}_chans{start_channel}-{end_channel}.ms")),
             log_file = os.path.join(log_files, f"batch_{item}_chans{start_channel}-{end_channel}.log"),
@@ -487,16 +498,4 @@ def main():
 
 
 if __name__ == '__main__':
-    ascii_art = '''
-    |=====================================================================|
-    |                    _  _    _                      _                 |
-    |  _ __ ___   _   _ | || |_ (_)         ___  _   _ | |__    ___       |
-    | | '_ ` _ \ | | | || || __|| | _____  / __|| | | || '_ \  / _ \      |
-    | | | | | | || |_| || || |_ | ||_____|| (__ | |_| || |_) ||  __/      |
-    | |_| |_| |_| \__,_||_| \__||_|        \___| \__,_||_.__/  \___|      |
-    |                                                                     |
-    |                                                                     |
-    |=====================================================================|
-    '''
-    print(f"\033[5;35m{ascii_art}\033[0m")  # Display the ASCII art
     main()            # Call the main function

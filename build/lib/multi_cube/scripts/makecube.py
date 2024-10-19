@@ -217,7 +217,7 @@ def main():
     # Extract the id from the submit message
     split_ms_job_id = split_ms_job_id.split()[-1]
 
-    print(f"\033[5;35m>>> Submitted the wsclean job with id: {split_ms_job_id} and name: split_ms\033[0m")
+    print(f"\033[5;35m>>> Submitted the wsclean job... \033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 0 : DEFINE THE SIZE OF EACH MS FILE, IN NUMBER OF CHANNELS PER BATCH FILE
@@ -292,13 +292,15 @@ def main():
         # Extract the job id from the submit text
         wsclean_job_id = wsclean_job_id.split()[-1]
 
-        print(f"\033[5;35m>>> Submitted the wsclean job with id: {wsclean_job_id} and name: wsclean_{item}\033[0m")
+        # print(f"\033[5;35m>>> Submitted the wsclean job with id: {wsclean_job_id} and name: wsclean_{item}\033[0m")
 
         # save job ids for future job dependency
         wsclean_job_ids.append(wsclean_job_id)
 
         # Set the start channel for the next run
         start_channel = end_channel
+    
+    print(f"\033[5;35m>>> Submitted wsclean jobs...\033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 3 : DELETE UNWANTED FILES
@@ -411,13 +413,15 @@ def main():
         # Extract the job ID from the output
         fitstool_job_id = fitstool_job_id.split()[-1]
 
-        print(f"\033[5;35m>>> Submitted the fitstool job with id: {fitstool_job_id} and name: fitstool_{item}033[0m")
+        # print(f"\033[5;35m>>> Submitted the fitstool job with id: {fitstool_job_id} and name: fitstool_{item}033[0m")
 
         # save job ids for future job dependency
         fitstool_job_ids.append(fitstool_job_id)
 
         # Set the start channel for the next run
         start_channel = end_channel
+    
+    print(f"\033[5;35m>>> Submitted fitstool jobs...\033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 5 : SUBTRACT
@@ -446,7 +450,7 @@ def main():
         # Name of the output cube
         batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits")
 
-        imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
+        imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules_dir, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
 
         # write the slurm file
         write_slurm(bash_filename = os.path.join(job_files, f"imcontsub_{item}.sh"),
@@ -470,29 +474,29 @@ def main():
         # Extract the job ID from the output
         imcontsub_job_id = imcontsub_job_id.split()[-1]
 
-        print(f"\033[5;35m>>> Submitted the imcontsub job with id: {imcontsub_job_id} and name: imcontsub_{item}\033[0m")
+        # print(f"\033[5;35m>>> Submitted the imcontsub job with id: {imcontsub_job_id} and name: imcontsub_{item}\033[0m")
 
         # save job ids for future job dependency
         imcontsub_job_ids.append(imcontsub_job_id)
 
         # Set the start channel for the next run
         start_channel = end_channel
+    
+    print(f"\033[5;35m>>> Submitted imcontsub jobs...\033[0m")
+    
 
-def display_ascii_art():
-    ascii_art = '''
-
-|=====================================================================|
-|                    _  _    _                      _                 |
-|  _ __ ___   _   _ | || |_ (_)         ___  _   _ | |__    ___       |
-| | '_ ` _ \ | | | || || __|| | _____  / __|| | | || '_ \  / _ \      |
-| | | | | | || |_| || || |_ | ||_____|| (__ | |_| || |_) ||  __/      |
-| |_| |_| |_| \__,_||_| \__||_|        \___| \__,_||_.__/  \___|      |
-|                                                                     |
-|                                                                     |
-|=====================================================================|                                                      
-    '''
-    print(ascii_art)
 
 if __name__ == '__main__':
-    display_ascii_art()  # Display the ASCII art
-    main()               # Call the main function
+    ascii_art = '''
+    |=====================================================================|
+    |                    _  _    _                      _                 |
+    |  _ __ ___   _   _ | || |_ (_)         ___  _   _ | |__    ___       |
+    | | '_ ` _ \ | | | || || __|| | _____  / __|| | | || '_ \  / _ \      |
+    | | | | | | || |_| || || |_ | ||_____|| (__ | |_| || |_) ||  __/      |
+    | |_| |_| |_| \__,_||_| \__||_|        \___| \__,_||_.__/  \___|      |
+    |                                                                     |
+    |                                                                     |
+    |=====================================================================|
+    '''
+    print(f"\033[5;35m{ascii_art}\033[0m")  # Display the ASCII art
+    main()            # Call the main function
