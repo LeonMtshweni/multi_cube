@@ -88,7 +88,7 @@ def main():
         config = yaml.safe_load(file)
 
     # Create the output directories
-    setup_project_structure()
+    setup_project_structure(config_dir)
 
     #-------------------------------------------------------------------------------
     # PATH CONFIG PARAMETERS (from the config file)

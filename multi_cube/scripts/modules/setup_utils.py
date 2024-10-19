@@ -12,18 +12,19 @@ def create_directories(directories):
         os.makedirs(directory, exist_ok=True)
         print(f"Created directory: {directory}")
 
-def setup_project_structure():
+def setup_project_structure(config_dir):
     """
     Set up the project structure by creating necessary directories in the parent directory.
     """
     # Define directories to create
     parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+    
     directories = [
-        os.path.join(parent_dir, 'msdir'),
-        os.path.join(parent_dir, 'outputs'), 
-        os.path.join(parent_dir, 'inputs'),
-        os.path.join(parent_dir, 'job_files'),
-        os.path.join(parent_dir, 'log_files')
+        os.path.join(config_dir, 'msdir'),
+        os.path.join(config_dir, 'outputs'), 
+        os.path.join(config_dir, 'inputs'),
+        os.path.join(config_dir, 'job_files'),
+        os.path.join(config_dir, 'log_files')
     ]
 
     # Create directories
