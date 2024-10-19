@@ -9,7 +9,7 @@ setup(
     long_description_content_type="text/markdown",  # Specify the correct content type for the README
     author="Leon K.B. Mtshweni",
     author_email="leonkb.m.astro@gmail.com",
-    url="https://github.com/yourusername/multi-cube",  # Update this URL to your actual GitHub repository
+    url="https://github.com/LeonMtshweni/multi-cube",  # Update this URL to your actual GitHub repository
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",  # Adjust if using another license
