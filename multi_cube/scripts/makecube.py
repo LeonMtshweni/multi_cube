@@ -493,10 +493,6 @@ def display_ascii_art():
     '''
     print(ascii_art)
 
-def main():
-    # Your main program logic here
-    print("Main function is running...")
-
 if __name__ == '__main__':
     display_ascii_art()  # Display the ASCII art
     main()               # Call the main function

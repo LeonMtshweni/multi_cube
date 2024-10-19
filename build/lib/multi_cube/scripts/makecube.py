@@ -25,6 +25,9 @@ PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Path to the default config file within the package
 DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, '..', 'config', 'config.yaml')
 
+# path to modules
+modules_dir = str(os.path.join(PACKAGE_DIR, 'modules'))
+
 # Get the directory path by stripping the filename (config.yml)
 DEFAULT_CONFIG_DIR = os.path.dirname(DEFAULT_CONFIG_PATH)
 
@@ -174,7 +177,7 @@ def main():
     msdir = os.path.join(current_directory, 'msdir')
     outputs = os.path.join(current_directory, 'outputs')
     inputs = os.path.join(current_directory, 'inputs')
-    modules = os.path.join(current_directory, 'scripts/modules')
+    modules = os.path.join(current_directory, ' modules')
     job_files = os.path.join(current_directory, 'job_files')
     log_files = os.path.join(current_directory, 'log_files')
 
@@ -191,7 +194,7 @@ def main():
     setup_msdir_structure(num_wsclean_runs, numchans, msdir)
 
     # Run CASA from script
-    mstransform_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} {msdir} --nologger --log2term --nogui\n"
+    mstransform_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules_dir, 'mstransform_utils.py')} {Path(base_data_dir, input_ms)} {numchans} {num_wsclean_runs} {msdir} --nologger --log2term --nogui\n"
 
     # write the slurm file
     write_slurm(bash_filename = bash_script,
@@ -475,5 +478,25 @@ def main():
         # Set the start channel for the next run
         start_channel = end_channel
 
+def display_ascii_art():
+    ascii_art = '''
+
+|=====================================================================|
+|                    _  _    _                      _                 |
+|  _ __ ___   _   _ | || |_ (_)         ___  _   _ | |__    ___       |
+| | '_ ` _ \ | | | || || __|| | _____  / __|| | | || '_ \  / _ \      |
+| | | | | | || |_| || || |_ | ||_____|| (__ | |_| || |_) ||  __/      |
+| |_| |_| |_| \__,_||_| \__||_|        \___| \__,_||_.__/  \___|      |
+|                                                                     |
+|                                                                     |
+|=====================================================================|                                                      
+    '''
+    print(ascii_art)
+
+def main():
+    # Your main program logic here
+    print("Main function is running...")
+
 if __name__ == '__main__':
-    main()
+    display_ascii_art()  # Display the ASCII art
+    main()               # Call the main function
