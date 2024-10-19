@@ -28,6 +28,7 @@ DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, '..', 'config', 'config.yaml')
 # Get the directory path by stripping the filename (config.yml)
 DEFAULT_CONFIG_DIR = os.path.dirname(DEFAULT_CONFIG_PATH)
 
+
 def create_directories_in_config_dir(config_dir):
     """
     Create 'output', 'msdir', and 'input' directories in the same location as the config file.
@@ -37,11 +38,9 @@ def create_directories_in_config_dir(config_dir):
     """
     # Define directories to create
     directories = [
-        os.path.join(config_dir, 'outputs'),
+        os.path.join(config_dir, 'output'),
         os.path.join(config_dir, 'msdir'),
-        os.path.join(config_dir, 'inputs'),
-        os.path.join(config_dir, 'job_files'),
-        os.path.join(config_dir, 'log_files')
+        os.path.join(config_dir, 'input')
     ]
     
     # Create the directories
@@ -50,12 +49,7 @@ def create_directories_in_config_dir(config_dir):
         print(f"Created directory: {directory}")
 
 def generate_default_config(config_path):
-    """
-    Copy the default config file to the specified location.
-    """
-
-    config_dir = os.path.dirname(config_path)
-    
+    """Copy the default config file to the specified location."""
     if os.path.exists(config_path):
         print(f"Configuration file {config_path} already exists.")
     else:
@@ -64,7 +58,7 @@ def generate_default_config(config_path):
         print(f"Default config file copied to {config_path}. Please modify it before running the script.")
 
     # Create directories in the config file location
-    create_directories_in_config_dir(config_dir)
+    create_directories_in_config_dir(DEFAULT_CONFIG_DIR)
 
 def main():
 
