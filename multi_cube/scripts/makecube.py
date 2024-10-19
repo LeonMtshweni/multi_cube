@@ -475,5 +475,25 @@ def main():
         # Set the start channel for the next run
         start_channel = end_channel
 
+def display_ascii_art():
+    ascii_art = '''
+
+|=====================================================================|
+|                    _  _    _                      _                 |
+|  _ __ ___   _   _ | || |_ (_)         ___  _   _ | |__    ___       |
+| | '_ ` _ \ | | | || || __|| | _____  / __|| | | || '_ \  / _ \      |
+| | | | | | || |_| || || |_ | ||_____|| (__ | |_| || |_) ||  __/      |
+| |_| |_| |_| \__,_||_| \__||_|        \___| \__,_||_.__/  \___|      |
+|                                                                     |
+|                                                                     |
+|=====================================================================|                                                      
+    '''
+    print(ascii_art)
+
+def main():
+    # Your main program logic here
+    print("Main function is running...")
+
 if __name__ == '__main__':
-    main()
+    display_ascii_art()  # Display the ASCII art
+    main()               # Call the main function
