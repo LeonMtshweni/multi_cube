@@ -87,18 +87,9 @@ def main():
     # Create the output directories
     setup_project_structure()
 
-    current_dir = Path.cwd()
-
-    # Define relative paths
-    msdir = os.path.join(current_dir, 'msdir')
-    outputs = os.path.join(current_dir, 'outputs')
-    inputs = os.path.join(current_dir, 'inputs')
-    modules = os.path.join(current_dir, 'scripts/modules')
-    job_files = os.path.join(current_dir, 'job_files')
-    log_files = os.path.join(current_dir, 'log_files')
-
     #-------------------------------------------------------------------------------
     # PATH CONFIG PARAMETERS (from the config file)
+    current_dir = config['paths']['current_dir']
     container_base_path = config['paths']['container_base_path']
     container_base_path_ii = config['paths']['container_base_path_ii']
     base_data_dir = config['paths']['base_data_dir']
@@ -140,6 +131,15 @@ def main():
     mem = config['compute']['mem']
     email_address = config['compute']['email_address']
     #-------------------------------------------------------------------------------
+
+    # Define relative paths
+    msdir = os.path.join(current_dir, 'msdir')
+    outputs = os.path.join(current_dir, 'outputs')
+    inputs = os.path.join(current_dir, 'inputs')
+    modules = os.path.join(current_dir, 'scripts/modules')
+    job_files = os.path.join(current_dir, 'job_files')
+    log_files = os.path.join(current_dir, 'log_files')
+
     # STEP 1 : SPLIT MS FILE
 
     # Ensure the WSClean output directory exists
