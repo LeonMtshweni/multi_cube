@@ -1,24 +1,25 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="multi_cube",
-    version="0.1.0",
-    description='SIP takes a SoFiA generated source catalog and produce images for publication or quick inspection. Images include HI contours overlaid on multiwavelength images, HI moment maps, pixel-by-pixel SNR maps, pv-diagrams with SoFiA mask, and spectra with and without noise.',
-    url='https://github.com/LeonMtshweni/multi_cube',
-    author='Leon Mtshweni',
-    author_email='leon.mtshweni@tuks.co.za',
-    packages=find_packages(),
-    install_requires=[
-        # all packages used native to python installation
+    name="multi-cube",  # Your package name on PyPI
+    version="0.1",  # Initial version
+    packages=find_packages(),  # Automatically find the packages
+    description="A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum subtracted ms file.",
+    long_description=open("README.md").read(),  # Long description from your README
+    long_description_content_type="A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum subtracted ms file. User modifies the configuration file multi_cube/config/config.yml",  # The README format
+    author="Leon K.B. Mtshweni",
+    author_email="leonkb.m.astro@gmail.com",
+    url="https://github.com/yourusername/multi-cube",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",  # Adjust if using another license
+        "Operating System :: OS Independent",
     ],
+    python_requires='>=3.6',  # Minimum Python version requirement
+
     entry_points={
         'console_scripts': [
-            'multi_cube=multi_cube.makecube:main',
+            'multi_cube=scripts.makecube:main'
         ],
     },
-    long_description=open('README.md').read(),
-    classifiers=[
-        "Programming Language :: Python :: 3"
-    ],
-    python_requires='>=3.6',
 )
