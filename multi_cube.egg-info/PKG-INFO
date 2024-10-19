@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: multi-cube
-Version: 0.2.2
+Version: 0.2.3
 Summary: A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum-subtracted ms file.
 Home-page: https://github.com/LeonMtshweni/multi-cube
 Author: Leon K.B. Mtshweni

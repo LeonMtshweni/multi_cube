@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import os
+import argparse
 import yaml
 import sys
 import glob
 from pathlib import Path
+import shutil  # For copying the default config file
 
 from scripts.modules.setup_utils import setup_project_structure
 from scripts.modules.setup_utils import setup_msdir_structure
@@ -15,21 +17,68 @@ from scripts.modules.bash_utils import write_slurm_striped_down
 from scripts.modules.remove_unwanted import generate_rm_commands
 from scripts.modules.stack_fits import stack_these_fits
 from scripts.modules.cleanup_utils import clean_up_batch_directory
-# from scripts.modules.casa_utils import generate_mstransform_cmd
 
+# Get the directory of the installed package (where the default config file is located)
+PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Path to the default config file within the package
+DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, 'config/config.yaml')
+
+def generate_default_config(config_path):
+    """Copy the default config file to the specified location."""
+    if os.path.exists(config_path):
+        print(f"Configuration file {config_path} already exists.")
+    else:
+        print(f"Copying the default config file to {config_path}...")
+        shutil.copy(DEFAULT_CONFIG_PATH, config_path)
+        print(f"Default config file copied to {config_path}. Please modify it before running the script.")
 
 def main():
+
+    # Set up argparse to handle command-line arguments
+    parser = argparse.ArgumentParser(description="Tool to generate FITS cubes from a continuum-subtracted ms file.")
+    
+    # Add the --get-config argument for generating the config file
+    parser.add_argument(
+        '-g', '--get-config',
+        action='store_true',
+        help='Generate the default configuration file in the current directory.'
+    )
+
+    # Add the --config argument (or -c) for specifying the path to the config file
+    parser.add_argument(
+        '-c', '--config',
+        type=str,
+        default=os.path.join(os.getcwd(), 'multi_cube_config.yml'),  # Default to the current working directory
+        help='Path to the configuration file (default: ./multi_cube_config.yml)'
+    )
+
+    # Parse the arguments
+    args = parser.parse_args()
+
+    # If --get-config is specified, generate the default config file and exit
+    if args.get_config:
+        generate_default_config(args.config)
+        sys.exit(0)
+
+    # Get the config file path from the command-line argument
+    config_path = args.config
+
+    # Check if the config file exists
+    if not os.path.exists(config_path):
+        print(f"Error: Configuration file {config_path} not found.")
+        print("Please run 'make_cube --get-config' to generate the default config file.")
+        sys.exit(1)
+
+    # Load the configuration file
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
 
     # Create the output directories
     setup_project_structure()
 
-
-    # Get the parent directory
-    # parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
     current_dir = Path.cwd()
 
-    # Potentially add a try/except statement here
     # Define relative paths
     msdir = os.path.join(current_dir, 'msdir')
     outputs = os.path.join(current_dir, 'outputs')
@@ -38,13 +87,8 @@ def main():
     job_files = os.path.join(current_dir, 'job_files')
     log_files = os.path.join(current_dir, 'log_files')
 
-
-    # Load the configuration file
-    with open('config/config.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-
     #-------------------------------------------------------------------------------
-    # PATH CONFIG PARAMETERS
+    # PATH CONFIG PARAMETERS (from the config file)
     container_base_path = config['paths']['container_base_path']
     container_base_path_ii = config['paths']['container_base_path_ii']
     base_data_dir = config['paths']['base_data_dir']
@@ -68,7 +112,7 @@ def main():
     #-------------------------------------------------------------------------------
 
     #-------------------------------------------------------------------------------
-    # GENERAL CONFIG PARAMATERS
+    # GENERAL CONFIG PARAMETERS
     numchans = config['general']['numchans']
     num_wsclean_runs = config['general']['num_wsclean_runs']
     imfitorder = config['general']['imfitorder']
