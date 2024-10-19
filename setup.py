@@ -6,7 +6,7 @@ def parse_requirements(filename):
 
 setup(
     name="multi-cube",  # Your package name on PyPI
-    version="0.1",  # Initial version
+    version="0.1.1",  # Initial version
     packages=find_packages(),  # Automatically find the packages
     description="A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum-subtracted ms file.",
     long_description=open("README.md").read(),  # Long description from your README

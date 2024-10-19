@@ -10,6 +10,7 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
+Requires-Dist: PyYAML>=6.0.1
 
 # multi_cube
 
