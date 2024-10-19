@@ -25,6 +25,29 @@ PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Path to the default config file within the package
 DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, '..', 'config', 'config.yaml')
 
+# Get the directory path by stripping the filename (config.yml)
+DEFAULT_CONFIG_DIR = os.path.dirname(DEFAULT_CONFIG_PATH)
+
+
+def create_directories_in_config_dir(config_dir):
+    """
+    Create 'output', 'msdir', and 'input' directories in the same location as the config file.
+    
+    Parameters:
+    - config_dir: Path to the directory where the configuration file is located.
+    """
+    # Define directories to create
+    directories = [
+        os.path.join(config_dir, 'output'),
+        os.path.join(config_dir, 'msdir'),
+        os.path.join(config_dir, 'input')
+    ]
+    
+    # Create the directories
+    for directory in directories:
+        os.makedirs(directory, exist_ok=True)
+        print(f"Created directory: {directory}")
+
 def generate_default_config(config_path):
     """Copy the default config file to the specified location."""
     if os.path.exists(config_path):
@@ -33,6 +56,9 @@ def generate_default_config(config_path):
         print(f"Copying the default config file to {config_path}...")
         shutil.copy(DEFAULT_CONFIG_PATH, config_path)
         print(f"Default config file copied to {config_path}. Please modify it before running the script.")
+
+    # Create directories in the config file location
+    create_directories_in_config_dir(DEFAULT_CONFIG_DIR)
 
 def main():
 
@@ -88,7 +114,7 @@ def main():
         config = yaml.safe_load(file)
 
     # Create the output directories
-    setup_project_structure(config_dir)
+    # setup_project_structure(config_dir)
 
     #-------------------------------------------------------------------------------
     # PATH CONFIG PARAMETERS (from the config file)
