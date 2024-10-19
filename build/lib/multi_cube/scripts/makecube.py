@@ -111,8 +111,8 @@ def main():
     absolute_config_path = os.path.abspath(config_path)
 
     # Extract the file name
-    config_basename = os.path.basename(absolute_config_path)
-    
+    config_basename = os.cwd() #os.path.basename(absolute_config_path)
+
     print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_basename}')
 
     # Check if the config file exists
