@@ -1,5 +1,9 @@
 from setuptools import setup, find_packages
 
+def parse_requirements(filename):
+    with open(filename, 'r') as req_file:
+        return req_file.read().splitlines()
+
 setup(
     name="multi-cube",  # Your package name on PyPI
     version="0.1",  # Initial version
@@ -16,6 +20,9 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',  # Minimum Python version requirement
+
+    # Automatically install dependencies from requirements.txt
+    install_requires=parse_requirements('requirements.txt'),
 
     entry_points={
         'console_scripts': [
