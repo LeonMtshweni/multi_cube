@@ -105,7 +105,7 @@ def main():
         sys.exit(0)
 
     # Get the config file path from the command-line argument
-    config_path = args.config
+    config_path = str(os.path.dirname( args.config))
     print(f'THIS IS THE EFFING PATH THAT I WANT TO VIEW {config_path}')
 
 
