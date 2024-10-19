@@ -450,7 +450,7 @@ def main():
         # Name of the output cube
         batch_cubename = Path(batch_dir_name, f"cube_{input_ms}_batch_{item}_chans{start_channel}-{end_channel}.fits")
 
-        imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
+        imcontsub_cmd = f"singularity exec {Path(container_base_path_ii, casa_container)} casa -c {os.path.join(modules_dir, 'casa_imcontsub.py')} --logfile {loging_file} --nogui mycube={batch_cubename} imfitorder={imfitorder}" 
 
         # write the slurm file
         write_slurm(bash_filename = os.path.join(job_files, f"imcontsub_{item}.sh"),
