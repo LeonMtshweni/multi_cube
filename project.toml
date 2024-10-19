@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=65.5"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multi-cube"
+dynamic = ["version"]
+description = "A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum subtracted ms file."
+readme = "README.md"
+authors = [
+    { name = "Leon KB Mtshweni", email = "leonkb.m.astro@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+]
+dependencies = [
+]
+
+[project.scripts]
+download_usr_fig = "src.download_usr_fig:main"
+sofia_image_pipeline = "src.image_pipeline:main"
+
+[project.urls]
+Homepage = "https://github.com/LeonMtshweni/multi_cube"
+
+[tool.hatch.version]
+path = "src/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+]
