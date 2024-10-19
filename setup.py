@@ -6,7 +6,7 @@ def parse_requirements(filename):
 
 setup(
     name="multi-cube",  # Your package name on PyPI
-    version="0.2.7",  # Initial version
+    version="0.2.8",  # Initial version
     packages=find_packages(),  # Automatically find the packages
     include_package_data=True,  # Include non-code files specified in MANIFEST.in
     description="A convenience tool that orchestrates the parallel generation of FITS cubes from a continuum-subtracted ms file.",
@@ -27,7 +27,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'make_cube=multi_cube.scripts.makecube:main'  # This maps the command 'multi_cube' to the 'main' function in 'scripts.makecube'
+            'multi_cube=multi_cube.scripts.makecube:main'  # This maps the command 'multi_cube' to the 'main' function in 'scripts.makecube'
         ],
     },
 )

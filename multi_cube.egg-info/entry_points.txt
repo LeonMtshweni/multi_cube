@@ -1,2 +1,2 @@
 [console_scripts]
-multi_cube = scripts.makecube:main
+make_cube = multi_cube.scripts.makecube:main
