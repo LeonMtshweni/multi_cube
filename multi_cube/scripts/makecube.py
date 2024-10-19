@@ -74,6 +74,9 @@ def main():
     # Get the config file path from the command-line argument
     config_path = args.config
 
+    # Get the current directory name
+    config_dir = os.path.dirname(config_path)
+
     # Check if the config file exists
     if not os.path.exists(config_path):
         print(f"Error: Configuration file {config_path} not found.")
@@ -133,12 +136,12 @@ def main():
     #-------------------------------------------------------------------------------
 
     # Define relative paths
-    msdir = os.path.join(current_dir, 'msdir')
-    outputs = os.path.join(current_dir, 'outputs')
-    inputs = os.path.join(current_dir, 'inputs')
-    modules = os.path.join(current_dir, 'scripts/modules')
-    job_files = os.path.join(current_dir, 'job_files')
-    log_files = os.path.join(current_dir, 'log_files')
+    msdir = os.path.join(config_dir, 'msdir')
+    outputs = os.path.join(config_dir, 'outputs')
+    inputs = os.path.join(config_dir, 'inputs')
+    modules = os.path.join(config_dir, 'scripts/modules')
+    job_files = os.path.join(config_dir, 'job_files')
+    log_files = os.path.join(config_dir, 'log_files')
 
     # STEP 1 : SPLIT MS FILE
 
