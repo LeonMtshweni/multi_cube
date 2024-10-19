@@ -20,7 +20,7 @@ setup(
         "License :: OSI Approved :: MIT License",  # Adjust if using another license
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',  # Minimum Python version requirement
+    python_requires='>=3.8',  # Minimum Python version requirement
 
     # Automatically install dependencies from requirements.txt
     install_requires=parse_requirements('requirements.txt'),
