@@ -17,12 +17,13 @@ from scripts.modules.bash_utils import write_slurm_striped_down
 from scripts.modules.remove_unwanted import generate_rm_commands
 from scripts.modules.stack_fits import stack_these_fits
 from scripts.modules.cleanup_utils import clean_up_batch_directory
+from importlib.metadata import version, PackageNotFoundError  # For Python 3.8+
 
 # Get the directory of the installed package (where the default config file is located)
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Path to the default config file within the package
-DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, 'config/config.yaml')
+DEFAULT_CONFIG_PATH = os.path.join(PACKAGE_DIR, '..', 'config', 'config.yaml')
 
 def generate_default_config(config_path):
     """Copy the default config file to the specified location."""
@@ -35,8 +36,17 @@ def generate_default_config(config_path):
 
 def main():
 
+    # Try to get the version of the package from the installed metadata
+    try:
+        package_version = version("multi-cube")  # Fetch version of your package
+    except PackageNotFoundError:
+        package_version = "unknown"  # Fallback to 'unknown' if the package is not installed
+
     # Set up argparse to handle command-line arguments
     parser = argparse.ArgumentParser(description="Tool to generate FITS cubes from a continuum-subtracted ms file.")
+
+    # Add the --version argument using the fetched version
+    parser.add_argument('--version', action='version', version=f'%(prog)s {package_version}')
     
     # Add the --get-config argument for generating the config file
     parser.add_argument(
