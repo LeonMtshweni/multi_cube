@@ -42,7 +42,7 @@ ascii_art = '''
 |                                                                     |
 |=====================================================================|
 '''
-print(f"\033[5;35m{ascii_art}\033[0m")  # Display the ASCII art
+print(f"\033[35m{ascii_art}\033[0m")  # Purple color, no flashing
 
 def create_directories_in_config_dir(config_dir):
     """
@@ -162,6 +162,7 @@ def main():
     chanbasename = config['wsclean']['chanbasename']
     cubebasename = config['wsclean']['cubebasename']
     datacolumn = config['wsclean']['datacolumn']
+    chans_out = config['wsclean']['chans_out']
     #-------------------------------------------------------------------------------
 
     #-------------------------------------------------------------------------------
@@ -268,7 +269,7 @@ def main():
             pixscale = pixscale,
             start_chan = 0,
             end_chan = channels_per_run,
-            chans_out = 3,
+            chans_out = chans_out,
             ms_file = str(Path(Path(msdir, f"batch_{item}_chans{start_channel}-{end_channel}"), f"batch_{item}_chans{start_channel}-{end_channel}.ms")),
             log_file = os.path.join(log_files, f"batch_{item}_chans{start_channel}-{end_channel}.log"),
             memory = config['wsclean']['memory'],

@@ -12,11 +12,11 @@ print(f" These are the arguments for cas imcontsub.py {args}")
 
 mycubecasa = mycubefits.replace('.fits','.im')
 
-importfits(fitsimage=mycubefits,imagename=mycubecasa)
+importfits(fitsimage=mycubefits,imagename=mycubecasa,overwrite=True)
 
 imcontsub(imagename=mycubecasa,fitorder=imfitorder,linefile=mycubecasa+'.linefile',contfile=mycubecasa+'.contfile') 
 
 exportfits_name = mycubecasa.replace('.im','.linefile.fits')
 
-exportfits(imagename=mycubecasa+'.linefile',fitsimage=exportfits_name)
+exportfits(imagename=mycubecasa+'.linefile',fitsimage=exportfits_name,overwrite=True)
 os.system('rm -fr %s'%mycubecasa)

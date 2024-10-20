@@ -229,7 +229,7 @@ def main():
     # Extract the id from the submit message
     split_ms_job_id = split_ms_job_id.split()[-1]
 
-    print(f"\033[5;35m>>> Submitted the wsclean job... \033[0m")
+    print(f"\033[5;35m>>> Submitted the mstransform job... \033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 0 : DEFINE THE SIZE OF EACH MS FILE, IN NUMBER OF CHANNELS PER BATCH FILE
@@ -312,7 +312,7 @@ def main():
         # Set the start channel for the next run
         start_channel = end_channel
     
-    print(f"\033[5;35m>>> Submitted wsclean jobs...\033[0m")
+    print(f"\033[5;35m>>> Submitted the wsclean jobs...\033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 3 : DELETE UNWANTED FILES
@@ -433,7 +433,7 @@ def main():
         # Set the start channel for the next run
         start_channel = end_channel
     
-    print(f"\033[5;35m>>> Submitted fitstool jobs...\033[0m")
+    print(f"\033[5;35m>>> Submitted the fitstool jobs...\033[0m")
 
     #-------------------------------------------------------------------------------
     # STEP 5 : SUBTRACT
@@ -494,7 +494,7 @@ def main():
         # Set the start channel for the next run
         start_channel = end_channel
     
-    print(f"\033[5;35m>>> Submitted imcontsub jobs...\033[0m")
+    print(f"\033[5;35m>>> Submitted the imcontsub jobs...\033[0m")
     
 
 
