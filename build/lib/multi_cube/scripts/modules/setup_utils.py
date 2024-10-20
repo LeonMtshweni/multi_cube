@@ -10,7 +10,7 @@ def create_directories(directories):
     """
     for directory in directories:
         os.makedirs(directory, exist_ok=True)
-        print(f"Created directory: {directory}")
+        # print(f"Created directory: {directory}")
 
 def setup_project_structure():
     """
