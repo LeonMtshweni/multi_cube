@@ -1,0 +1,53 @@
+paths:
+  container_base_path: "/software/astro/caracal/STIMELA_IMAGES_1.7.5/"
+  base_data_dir: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir" # full path to ms file
+  current_dir:
+  wsclean_output_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
+  mstransform_output_directory: "/idia/users/mtshweni/experiments/Nov_01_continued/Nov_01/msdir"
+  wsclean_container: "stimela_wsclean_1.6.3.sif"
+  kern_container: "/data/exp_soft/containers/kern6-2021-06-11.simg"
+  container_base_path_ii: "/data/exp_soft/containers/"
+  casa_container: "casa-stable-6.5.5-21-py3.6.sif"#stimela_casa_1.7.1.sif"
+  log_file: "log_makeChanMaps.txt"
+
+general:
+  input_ms: "test.ms"
+  numchans: 40
+  num_wsclean_runs: 2
+  imfitorder: 4
+  extensions_to_delete_r1:
+    - "*-psf.fits"
+    - "*-model.fits"
+    - "*-residual.fits"
+    - "*-dirty.fits"
+    - "-MFS-*.fits"
+  extensions_to_delete_r2:
+    - "*.linefile"
+    - "*.contfile"
+    - "*-image.fits"
+
+compute:
+  time: '10:00:00'
+  partition: 'Main'
+  ntasks: '4'
+  nodes: '4'
+  cpus: '16'
+  mem: '50GB'
+  email_address:
+
+wsclean:
+  chanbasename: "channel_map"
+  cubebasename: "cube_MK-SPT-P045-1k.ms.contsub.fits"
+  local_rms: "MK-SPT-P045-1k.ms.contsub"
+  datacolumn: 'DATA'
+  memory: "95"
+  chans_out: 8
+  weight: "briggs -0.5"
+  niter: 1
+  auto_threshold: 0.5
+  auto_mask: 4
+  gain: 0.1
+  mgain: 0.95
+  numpix: 6000
+  pixscale: "1.7asec"
+  noupdatemodelrequired: True # true means model no updated and false means we're allowing the model to update
